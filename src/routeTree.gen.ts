@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BoardsBoardIdRouteImport } from './routes/boards.$boardId'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const BoardsBoardIdRoute = BoardsBoardIdRouteImport.update({
   path: '/boards/$boardId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/(auth)/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sign-in': typeof authSignInRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sign-in': typeof authSignInRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(auth)/sign-in': typeof authSignInRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/boards/$boardId'
+  fullPaths: '/' | '/sign-in' | '/boards/$boardId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/boards/$boardId'
-  id: '__root__' | '/' | '/boards/$boardId'
+  to: '/' | '/sign-in' | '/boards/$boardId'
+  id: '__root__' | '/' | '/(auth)/sign-in' | '/boards/$boardId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  authSignInRoute: typeof authSignInRoute
   BoardsBoardIdRoute: typeof BoardsBoardIdRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoardsBoardIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  authSignInRoute: authSignInRoute,
   BoardsBoardIdRoute: BoardsBoardIdRoute,
 }
 export const routeTree = rootRouteImport
@@ -77,10 +95,11 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

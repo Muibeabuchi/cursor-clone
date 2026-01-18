@@ -7,6 +7,8 @@ import {
   useRouterState,
   HeadContent,
   Scripts,
+  useRouteContext,
+  redirect,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
@@ -19,9 +21,25 @@ import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { Loader } from "~/components/Loader";
 import { ThemeProvider } from "~/components/theme-provider";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  useAuth,
+  UserButton,
+} from "@clerk/tanstack-react-start";
+import { ConvexQueryClient } from "@convex-dev/react-query";
+import { ConvexReactClient } from "convex/react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
+
+import { createServerFn } from "@tanstack/react-start";
+import { auth } from "@clerk/tanstack-react-start/server";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
+  convexQueryClient: ConvexQueryClient;
+  convexClient: ConvexReactClient;
 }>()({
   head: () => ({
     meta: [
@@ -61,6 +79,21 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
+  // beforeLoad: async (ctx) => {
+  //   const auth = await authStateFn();
+  //   const { userId, token } = auth;
+
+  //   // During SSR only (the only time serverHttpClient exists),
+  //   // set the Clerk auth token to make HTTP queries with.
+  //   if (token) {
+  //     ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+  //   }
+
+  //   return {
+  //     userId,
+  //     token,
+  //   };
+  // },
   errorComponent: (props) => {
     return (
       <RootDocument>
@@ -73,10 +106,17 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
+  const context = useRouteContext({ from: Route.id });
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <ClerkProvider
+    // publishableKey={import.meta.env.CLERK_PUBLISHABLE_KEY}
+    >
+      <ConvexProviderWithClerk client={context.convexClient} useAuth={useAuth}>
+        <RootDocument>
+          <Outlet />
+        </RootDocument>
+      </ConvexProviderWithClerk>
+    </ClerkProvider>
   );
 }
 
@@ -141,6 +181,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+    // </ClerkProvider>
   );
 }
 
