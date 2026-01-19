@@ -24,7 +24,9 @@ export function getRouter() {
   const convex = new ConvexReactClient(CONVEX_URL, {
     unsavedChangesWarning: false,
   });
-  const convexQueryClient = new ConvexQueryClient(convex);
+  const convexQueryClient = new ConvexQueryClient(convex.url, {
+    expectAuth: true,
+  });
 
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {

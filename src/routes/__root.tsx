@@ -21,20 +21,23 @@ import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { Loader } from "~/components/Loader";
 import { ThemeProvider } from "~/components/theme-provider";
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  useAuth,
-  UserButton,
-} from "@clerk/tanstack-react-start";
+
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { ConvexReactClient } from "convex/react";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 import { createServerFn } from "@tanstack/react-start";
-import { auth } from "@clerk/tanstack-react-start/server";
+import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
+
+import { authClient } from "~/lib/auth-client";
+import { getToken } from "~/lib/auth-server";
+
+// import type { ConvexQueryClient } from "@convex-dev/react-query";
+// import { createServerFn } from "@tanstack/react-start";
+
+// Get auth information for SSR using available cookies
+const getAuth = createServerFn({ method: "GET" }).handler(async () => {
+  return await getToken();
+});
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -79,21 +82,20 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  // beforeLoad: async (ctx) => {
-  //   const auth = await authStateFn();
-  //   const { userId, token } = auth;
-
-  //   // During SSR only (the only time serverHttpClient exists),
-  //   // set the Clerk auth token to make HTTP queries with.
-  //   if (token) {
-  //     ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
-  //   }
-
-  //   return {
-  //     userId,
-  //     token,
-  //   };
-  // },
+  beforeLoad: async (ctx) => {
+    const token = await getAuth();
+    // all queries, mutations and actions through TanStack Query will be
+    // authenticated during SSR if we have a valid token
+    if (token) {
+      // During SSR only (the only time serverHttpClient exists),
+      // set the auth token to make HTTP queries with.
+      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    }
+    return {
+      isAuthenticated: !!token,
+      token,
+    };
+  },
   errorComponent: (props) => {
     return (
       <RootDocument>
@@ -108,15 +110,15 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   const context = useRouteContext({ from: Route.id });
   return (
-    <ClerkProvider
-    // publishableKey={import.meta.env.CLERK_PUBLISHABLE_KEY}
+    <ConvexBetterAuthProvider
+      client={context.convexQueryClient.convexClient}
+      authClient={authClient}
+      initialToken={context.token}
     >
-      <ConvexProviderWithClerk client={context.convexClient} useAuth={useAuth}>
-        <RootDocument>
-          <Outlet />
-        </RootDocument>
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </ConvexBetterAuthProvider>
   );
 }
 
