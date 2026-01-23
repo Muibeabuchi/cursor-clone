@@ -17,11 +17,17 @@ export function useSignOut() {
   return { logOut };
 }
 
-export function useLogin() {
+export function useSignIn() {
   const router = useRouter();
 
-  const signIn = ({ email, password }: { email: string; password: string }) =>
-    authClient.signIn.email(
+  const signIn = async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    return await authClient.signIn.email(
       {
         email,
         password,
@@ -32,13 +38,13 @@ export function useLogin() {
         },
       },
     );
-
+  };
   return { signIn };
 }
 
 export function useSignUp() {
   const router = useRouter();
-  const signUp = ({
+  const signUp = async ({
     email,
     password,
     name,
@@ -47,7 +53,7 @@ export function useSignUp() {
     password: string;
     name: string;
   }) =>
-    authClient.signUp.email(
+    await authClient.signUp.email(
       {
         email,
         password,
@@ -65,8 +71,8 @@ export function useSignUp() {
 
 export function useGithubAuth() {
   const router = useRouter();
-  const signInWithGithub = () =>
-    authClient.signIn.social(
+  const signInWithGithub = async () =>
+    await authClient.signIn.social(
       {
         provider: "github",
       },

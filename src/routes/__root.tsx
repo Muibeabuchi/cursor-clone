@@ -30,14 +30,10 @@ import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";
+import { getAuth } from "~/utils/auth-ssr";
 
 // import type { ConvexQueryClient } from "@convex-dev/react-query";
 // import { createServerFn } from "@tanstack/react-start";
-
-// Get auth information for SSR using available cookies
-const getAuth = createServerFn({ method: "GET" }).handler(async () => {
-  return await getToken();
-});
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;

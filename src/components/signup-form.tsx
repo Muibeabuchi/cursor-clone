@@ -14,13 +14,13 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 import { emailSignUpSchema } from "~/schema/authSchema";
 import { useForm } from "@tanstack/react-form";
 import { useEffect } from "react";
-import { useGithubAuth, useLogin, useSignUp } from "~/hooks/useAuthMethods";
+import { useGithubAuth, useSignIn, useSignUp } from "~/hooks/useAuthMethods";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  // const { signIn } = useLogin();
+  const { signIn } = useSignIn();
   const { signUp } = useSignUp();
   const { signInWithGithub } = useGithubAuth();
   const signUpForm = useForm({
@@ -41,10 +41,6 @@ export function SignupForm({
       });
     },
   });
-
-  // useEffect(() => {
-  //   console.log(signUpForm.state.errors);
-  // }, [signUpForm.state.errors]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -88,10 +84,6 @@ export function SignupForm({
                           {item?.message}
                         </FieldDescription>
                       ))}
-                    {/* <FieldDescription>
-                      We&apos;ll use this to contact you. We will not share your
-                      email with anyone else.
-                    </FieldDescription> */}
                   </Field>
                 )}
               />
@@ -129,19 +121,7 @@ export function SignupForm({
                   </Field>
                 )}
               />
-              {/* <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
-                <FieldDescription>
-                  We&apos;ll use this to contact you. We will not share your
-                  email with anyone else.
-                </FieldDescription>
-              </Field> */}
+
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
                   <signUpForm.Field
@@ -219,11 +199,7 @@ export function SignupForm({
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator>
-              <Field className="grid grid-cols-2 gap-4">
-                <Button variant="outline" type="button">
-                  <FaGoogle />
-                  <span className="sr-only">Sign up with Google</span>
-                </Button>
+              <Field className="grid ">
                 <Button variant="outline" type="button">
                   <FaGithub />
                   <span className="sr-only">Sign up with GitHub</span>

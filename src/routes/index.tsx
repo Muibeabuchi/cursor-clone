@@ -3,6 +3,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Loader } from "~/components/Loader";
 import { Button } from "~/components/ui/button";
+import { useSignOut } from "~/hooks/useAuthMethods";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(
-        convexQuery(api.auth.getCurrentUser, {})
+        convexQuery(api.auth.getCurrentUser, {}),
       ),
       // Load multiple queries in parallel if needed
     ]);
@@ -18,11 +19,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { logOut } = useSignOut();
   return (
     <div className="p-8 space-y-2">
       <h1 className="text-2xl font-black">Boards</h1>
       <Button>This is a Shadcn UI Button</Button>
       <Button className="font-mono">Plex Mono Button</Button>
+      <Button className="font-mono ml-5" onClick={logOut}>
+        Log Out
+      </Button>
     </div>
   );
 }

@@ -16,66 +16,106 @@ import {
 } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { Link } from "@tanstack/react-router";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { useGithubAuth, useSignIn } from "~/hooks/useAuthMethods";
+import { useForm } from "@tanstack/react-form";
+import React from "react";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { signInWithGithub } = useGithubAuth();
+  const { signIn } = useSignIn();
+
+  const loginForm = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: async ({ value: { email, password } }) => {
+      console.log({ email, password });
+      const { data, error } = await signIn({ email, password });
+
+      if (error) {
+        console.log(error);
+      }
+
+      console.log(data);
+    },
+  });
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
-            Login with your GitHub or Google account
-          </CardDescription>
+          <CardDescription>Login with your GitHub</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <React.Fragment>
             <FieldGroup>
               <Field>
                 <Button variant="outline" type="button">
                   <FaGithub />
                   Login with GitHub
                 </Button>
-                <Button variant="outline" type="button">
-                  <FaGoogle />
-                  Login with Google
-                </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
+              <form
+                className="space-y-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  loginForm.handleSubmit();
+                }}
+              >
+                <loginForm.Field
+                  name="email"
+                  children={(field) => (
+                    <>
+                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <Input
+                        id={field.name}
+                        type="email"
+                        placeholder="joe@example.com"
+                        required
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                      />
+                    </>
+                  )}
                 />
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" required />
-              </Field>
-              <Field>
-                <Button type="submit">Login</Button>
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account? <Link to="/sign-up">Sign up</Link>
-                </FieldDescription>
-              </Field>
+
+                <loginForm.Field
+                  name="password"
+                  children={(field) => (
+                    <>
+                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <Input
+                        id={field.name}
+                        type="password"
+                        placeholder="********"
+                        required
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                      />
+                    </>
+                  )}
+                />
+
+                <Field className="mt-4">
+                  <Button type="submit">Login</Button>
+                  <FieldDescription className="text-center">
+                    Don&apos;t have an account?{" "}
+                    <Link to="/sign-up">Sign up</Link>
+                  </FieldDescription>
+                </Field>
+              </form>
             </FieldGroup>
-          </form>
+          </React.Fragment>
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
