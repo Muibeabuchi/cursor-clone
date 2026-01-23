@@ -23,8 +23,9 @@ function Home() {
   return (
     <div className="p-8 space-y-2">
       <h1 className="text-2xl font-black">Boards</h1>
-      <Button>This is a Shadcn UI Button</Button>
-      <Button className="font-mono">Plex Mono Button</Button>
+      <Link to="/sign-in">
+        <Button className="font-mono">Sign In</Button>
+      </Link>
       <Button className="font-mono ml-5" onClick={logOut}>
         Log Out
       </Button>

@@ -31,6 +31,7 @@ import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";
 import { getAuth } from "~/utils/auth-ssr";
+import { authQueryOptions } from "~/lib/queries/auth";
 
 // import type { ConvexQueryClient } from "@convex-dev/react-query";
 // import { createServerFn } from "@tanstack/react-start";
@@ -78,15 +79,18 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  beforeLoad: async (ctx) => {
-    const token = await getAuth();
+  beforeLoad: async ({ context }) => {
+    // const token = await getAuth();
+    const token = await context.queryClient.ensureQueryData(authQueryOptions());
     // all queries, mutations and actions through TanStack Query will be
     // authenticated during SSR if we have a valid token
     if (token) {
       // During SSR only (the only time serverHttpClient exists),
       // set the auth token to make HTTP queries with.
-      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+      context.convexQueryClient.serverHttpClient?.setAuth(token);
     }
+
+    // console.log("token", token);
     return {
       isAuthenticated: !!token,
       token,

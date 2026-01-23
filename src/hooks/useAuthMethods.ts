@@ -1,14 +1,21 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { email } from "better-auth";
 import { authClient } from "~/lib/auth-client";
+import { authQueryOptions } from "~/lib/queries/auth";
 
 export function useSignOut() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const logOut = () => {
     authClient.signOut({
       fetchOptions: {
         onSuccess() {
+          queryClient.removeQueries({
+            queryKey: authQueryOptions().queryKey,
+          });
+          router.invalidate();
           router.navigate({ to: "/sign-in" });
         },
       },
