@@ -8,6 +8,22 @@ import { Button } from "~/components/ui/button";
 import { useSignOut } from "~/hooks/useAuthMethods";
 import { authQueryOptions } from "~/lib/queries/auth";
 
+import { useChat } from "@ai-sdk/react";
+import { Fragment, useState } from "react";
+import { DefaultChatTransport } from "ai";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationEmptyState,
+  ConversationScrollButton,
+} from "~/components/ai-elements/conversation";
+import { MessageSquare } from "lucide-react";
+import {
+  Message,
+  MessageContent,
+  MessageResponse,
+} from "~/components/ai-elements/message";
+
 export const Route = createFileRoute("/(main)/")({
   component: Home,
   pendingComponent: () => <Loader />,
@@ -27,25 +43,22 @@ function Home() {
   const { data: userToken } = useQuery(authQueryOptions());
   return (
     <div className="p-8 space-y-2">
-      <h1 className="text-2xl font-black">Boards</h1>
-      <Link to="/sign-in">
-        <Button className="font-mono">Sign In</Button>
-      </Link>
-      <Button className="font-mono ml-5" onClick={logOut}>
-        Log Out
-      </Button>
-
       {userToken ? (
-        <p className="text-green-600">
-          This text will only show when the user has a token from the server
-        </p>
+        <Fragment>
+          <div className="">
+            <Button className="font-mono ml-5" onClick={logOut}>
+              Log Out
+            </Button>
+          </div>
+          <Chat />
+        </Fragment>
       ) : (
-        <p className="text-red-600">
-          This text will only show when the user has no token from the server
-        </p>
+        <Link to="/sign-in">
+          <Button className="font-mono">Sign In</Button>
+        </Link>
       )}
 
-      <Authenticated>
+      {/* <Authenticated>
         <p className="text-yellow-600">
           This text only shows up when the user is Authenticated
         </p>
@@ -55,7 +68,77 @@ function Home() {
         <p className="text-indigo-600">
           This text only shows up when the user is UnAuthenticated
         </p>
-      </Unauthenticated>
+      </Unauthenticated> */}
+    </div>
+  );
+}
+
+// import { createFileRoute } from '@tanstack/react-router';
+
+// export const Route = createFileRoute('/')({
+//   component: Chat,
+// });
+
+function Chat() {
+  const [input, setInput] = useState("");
+  const { messages, sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/ai/chat/",
+    }),
+  });
+  return (
+    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+      <div className="h-full">
+        <Conversation>
+          <ConversationContent>
+            {messages.length === 0 ? (
+              <ConversationEmptyState
+                title="Start a Conversation"
+                description="Send a message to get started"
+                icon={
+                  <MessageSquare className="size-12 text-muted-foreground" />
+                }
+              />
+            ) : (
+              messages.map((message) => (
+                <Message from={message.role} key={message.id}>
+                  <MessageContent>
+                    {/* {message.role === "user" ? "User: " : "AI: "} */}
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <MessageResponse key={`${message.id}-${i}`}>
+                              {part.text}
+                            </MessageResponse>
+                          );
+                        default:
+                          return null;
+                      }
+                    })}
+                  </MessageContent>
+                </Message>
+              ))
+            )}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>
+      </div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage({ text: input });
+          setInput("");
+        }}
+      >
+        <input
+          className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
+          value={input}
+          placeholder="Say something..."
+          onChange={(e) => setInput(e.currentTarget.value)}
+        />
+      </form>
     </div>
   );
 }
