@@ -25,16 +25,11 @@ import { ThemeProvider } from "~/components/theme-provider";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { ConvexReactClient } from "convex/react";
 
-import { createServerFn } from "@tanstack/react-start";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 
 import { authClient } from "~/lib/auth-client";
-import { getToken } from "~/lib/auth-server";
-import { getAuth } from "~/utils/auth-ssr";
-import { authQueryOptions } from "~/lib/queries/auth";
 
-// import type { ConvexQueryClient } from "@convex-dev/react-query";
-// import { createServerFn } from "@tanstack/react-start";
+import { authQueryOptions } from "~/lib/queries/auth";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
