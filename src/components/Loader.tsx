@@ -1,7 +1,10 @@
-export function Loader() {
+import { Spinner } from "./ui/spinner";
+
+export function LoadingIndicator() {
+  // const isLoading = useRouterState({ select: (s) => s.isLoading });
   return (
-    <div className="flex h-full">
-      <div className="m-auto border-gray-300 h-20 max-h-full aspect-square animate-spin rounded-full border-8 border-t-slate-900" />
+    <div className="flex items-center justify-center h-screen bg-background">
+      <Spinner className="animate-spin text-ring size-6" />
     </div>
-  )
+  );
 }

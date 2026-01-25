@@ -1,11 +1,14 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
 import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
 
 export const projectQueryOptions = {
   getProjects: convexQuery(api.projects.get, {}),
   getProjectsPartial: (limit: number) =>
     convexQuery(api.projects.getPartial, { limit }),
+  getById: (projectId: Id<"projects">) =>
+    convexQuery(api.projects.getById, { projectId }),
 };
 
 export const useProjects = () =>
@@ -19,10 +22,22 @@ export const useProjectsPartial = (limit: number) => {
   });
 };
 
+export const useGetProject = (projectId: Id<"projects">) => {
+  return useSuspenseQuery({
+    ...projectQueryOptions.getById(projectId),
+  });
+};
+
 // -------------------------MUTATIONS----------------------------//
 
 export const useCreateProjects = () => {
   return useMutation({
     mutationFn: useConvexMutation(api.projects.create),
+  });
+};
+
+export const useRenameProjectName = () => {
+  return useMutation({
+    mutationFn: useConvexMutation(api.projects.renameProjectName),
   });
 };

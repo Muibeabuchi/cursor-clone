@@ -1,8 +1,12 @@
 import {
+  authorizedProjectMutation,
+  authorizedProjectQuery,
+} from "./middleware/projectMiddleware";
+import {
   authenticatedMutation,
   authenticatedQuery,
-} from "./middleware/authenticatedUserMiddleware";
-import { v } from "convex/values";
+} from "./middleware/authMiddleware";
+import { ConvexError, v } from "convex/values";
 
 export const getPartial = authenticatedQuery({
   args: {
@@ -30,6 +34,29 @@ export const get = authenticatedQuery({
       .order("desc")
       .collect();
     return projects;
+  },
+});
+
+export const getById = authorizedProjectQuery({
+  args: {
+    projectId: v.id("projects"),
+  },
+  async handler(ctx) {
+    return ctx.project;
+  },
+});
+
+export const renameProjectName = authorizedProjectMutation({
+  args: {
+    projectId: v.id("projects"),
+    name: v.string(),
+  },
+  async handler(ctx, args) {
+    const { project } = ctx;
+    await ctx.db.patch("projects", project._id, {
+      name: args.name,
+      updatedAt: Date.now(),
+    });
   },
 });
 

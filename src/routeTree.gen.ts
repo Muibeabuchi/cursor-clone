@@ -17,7 +17,8 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as authAuthLayoutSignUpRouteImport } from './routes/(auth)/_auth-layout/sign-up'
 import { Route as authAuthLayoutSignInRouteImport } from './routes/(auth)/_auth-layout/sign-in'
 import { Route as ApiAiChatRouteRouteImport } from './routes/api/ai/chat/route'
-import { Route as mainMainLayoutProjectsProjectIdRouteImport } from './routes/(main)/_main-layout/projects.$projectId'
+import { Route as mainMainLayoutProjectsProjectIdRouteRouteImport } from './routes/(main)/_main-layout/projects.$projectId.route'
+import { Route as mainMainLayoutProjectsProjectIdIndexRouteImport } from './routes/(main)/_main-layout/projects.$projectId.index'
 
 const ApiInngestRouteRoute = ApiInngestRouteRouteImport.update({
   id: '/api/inngest',
@@ -57,11 +58,17 @@ const ApiAiChatRouteRoute = ApiAiChatRouteRouteImport.update({
   path: '/api/ai/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const mainMainLayoutProjectsProjectIdRoute =
-  mainMainLayoutProjectsProjectIdRouteImport.update({
+const mainMainLayoutProjectsProjectIdRouteRoute =
+  mainMainLayoutProjectsProjectIdRouteRouteImport.update({
     id: '/projects/$projectId',
     path: '/projects/$projectId',
     getParentRoute: () => mainMainLayoutRouteRoute,
+  } as any)
+const mainMainLayoutProjectsProjectIdIndexRoute =
+  mainMainLayoutProjectsProjectIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => mainMainLayoutProjectsProjectIdRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -71,7 +78,8 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof authAuthLayoutSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/': typeof mainMainLayoutIndexRoute
-  '/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRoute
+  '/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRouteRouteWithChildren
+  '/projects/$projectId/': typeof mainMainLayoutProjectsProjectIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/api/inngest': typeof ApiInngestRouteRoute
@@ -80,7 +88,7 @@ export interface FileRoutesByTo {
   '/sign-up': typeof authAuthLayoutSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/': typeof mainMainLayoutIndexRoute
-  '/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRoute
+  '/projects/$projectId': typeof mainMainLayoutProjectsProjectIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -92,7 +100,8 @@ export interface FileRoutesById {
   '/(auth)/_auth-layout/sign-up': typeof authAuthLayoutSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/(main)/_main-layout/': typeof mainMainLayoutIndexRoute
-  '/(main)/_main-layout/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRoute
+  '/(main)/_main-layout/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRouteRouteWithChildren
+  '/(main)/_main-layout/projects/$projectId/': typeof mainMainLayoutProjectsProjectIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/'
     | '/projects/$projectId'
+    | '/projects/$projectId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/api/inngest'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/(main)/_main-layout/'
     | '/(main)/_main-layout/projects/$projectId'
+    | '/(main)/_main-layout/projects/$projectId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -196,8 +207,15 @@ declare module '@tanstack/react-router' {
       id: '/(main)/_main-layout/projects/$projectId'
       path: '/projects/$projectId'
       fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof mainMainLayoutProjectsProjectIdRouteImport
+      preLoaderRoute: typeof mainMainLayoutProjectsProjectIdRouteRouteImport
       parentRoute: typeof mainMainLayoutRouteRoute
+    }
+    '/(main)/_main-layout/projects/$projectId/': {
+      id: '/(main)/_main-layout/projects/$projectId/'
+      path: '/'
+      fullPath: '/projects/$projectId/'
+      preLoaderRoute: typeof mainMainLayoutProjectsProjectIdIndexRouteImport
+      parentRoute: typeof mainMainLayoutProjectsProjectIdRouteRoute
     }
   }
 }
@@ -215,14 +233,30 @@ const authAuthLayoutRouteRouteChildren: authAuthLayoutRouteRouteChildren = {
 const authAuthLayoutRouteRouteWithChildren =
   authAuthLayoutRouteRoute._addFileChildren(authAuthLayoutRouteRouteChildren)
 
+interface mainMainLayoutProjectsProjectIdRouteRouteChildren {
+  mainMainLayoutProjectsProjectIdIndexRoute: typeof mainMainLayoutProjectsProjectIdIndexRoute
+}
+
+const mainMainLayoutProjectsProjectIdRouteRouteChildren: mainMainLayoutProjectsProjectIdRouteRouteChildren =
+  {
+    mainMainLayoutProjectsProjectIdIndexRoute:
+      mainMainLayoutProjectsProjectIdIndexRoute,
+  }
+
+const mainMainLayoutProjectsProjectIdRouteRouteWithChildren =
+  mainMainLayoutProjectsProjectIdRouteRoute._addFileChildren(
+    mainMainLayoutProjectsProjectIdRouteRouteChildren,
+  )
+
 interface mainMainLayoutRouteRouteChildren {
   mainMainLayoutIndexRoute: typeof mainMainLayoutIndexRoute
-  mainMainLayoutProjectsProjectIdRoute: typeof mainMainLayoutProjectsProjectIdRoute
+  mainMainLayoutProjectsProjectIdRouteRoute: typeof mainMainLayoutProjectsProjectIdRouteRouteWithChildren
 }
 
 const mainMainLayoutRouteRouteChildren: mainMainLayoutRouteRouteChildren = {
   mainMainLayoutIndexRoute: mainMainLayoutIndexRoute,
-  mainMainLayoutProjectsProjectIdRoute: mainMainLayoutProjectsProjectIdRoute,
+  mainMainLayoutProjectsProjectIdRouteRoute:
+    mainMainLayoutProjectsProjectIdRouteRouteWithChildren,
 }
 
 const mainMainLayoutRouteRouteWithChildren =

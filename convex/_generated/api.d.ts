@@ -10,7 +10,10 @@
 
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
-import type * as middleware_authenticatedUserMiddleware from "../middleware/authenticatedUserMiddleware.js";
+import type * as middleware_authMiddleware from "../middleware/authMiddleware.js";
+import type * as middleware_projectMiddleware from "../middleware/projectMiddleware.js";
+import type * as models_authModel from "../models/authModel.js";
+import type * as models_projectModel from "../models/projectModel.js";
 import type * as projects from "../projects.js";
 
 import type {
@@ -22,7 +25,10 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
-  "middleware/authenticatedUserMiddleware": typeof middleware_authenticatedUserMiddleware;
+  "middleware/authMiddleware": typeof middleware_authMiddleware;
+  "middleware/projectMiddleware": typeof middleware_projectMiddleware;
+  "models/authModel": typeof models_authModel;
+  "models/projectModel": typeof models_projectModel;
   projects: typeof projects;
 }>;
 

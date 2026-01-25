@@ -19,7 +19,7 @@ import { IconLink } from "~/components/IconLink";
 import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
-import { Loader } from "~/components/Loader";
+import { LoadingIndicator } from "~/components/Loader";
 import { ThemeProvider } from "~/components/theme-provider";
 
 import { ConvexQueryClient } from "@convex-dev/react-query";
@@ -30,6 +30,7 @@ import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { authClient } from "~/lib/auth-client";
 
 import { authQueryOptions } from "~/lib/queries/auth";
+import { Spinner } from "~/components/ui/spinner";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -100,6 +101,7 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: () => <NotFound />,
   component: RootComponent,
+  pendingComponent: () => <LoadingIndicator />,
 });
 
 function RootComponent() {
@@ -137,19 +139,5 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-    // </ClerkProvider>
-  );
-}
-
-function LoadingIndicator() {
-  const isLoading = useRouterState({ select: (s) => s.isLoading });
-  return (
-    <div
-      className={`h-12 transition-all duration-300 ${
-        isLoading ? `opacity-100 delay-300` : `opacity-0 delay-0`
-      }`}
-    >
-      <Loader />
-    </div>
   );
 }
