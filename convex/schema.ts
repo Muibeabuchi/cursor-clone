@@ -4,11 +4,23 @@ import { type Infer, v } from "convex/values";
 const importStatus = v.optional(
   v.union(v.literal("importing"), v.literal("completed"), v.literal("failed")),
 );
+const exportStatus = v.optional(
+  v.union(
+    v.literal("exporting"),
+    v.literal("completed"),
+    v.literal("failed"),
+    v.literal("cancelled"),
+  ),
+);
 
 const projectsTable = defineTable({
   name: v.string(),
-  ownerId: v.string(),
+  // !TODO: change ownerId to v.id("user") after proper research on why the validation is failing
+  ownerId: /*v.id("user") */ v.string(),
+  updatedAt: v.number(),
   importStatus,
+  exportStatus,
+  exportRepoUrl: v.optional(v.string()),
 }).index("by_owner_id", ["ownerId"]);
 
 const schema = defineSchema({

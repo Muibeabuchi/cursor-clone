@@ -1,17 +1,19 @@
 import { streamText, convertToModelMessages, UIMessage } from "ai";
 import { createFileRoute } from "@tanstack/react-router";
-import google from "~/lib/google-gemini";
-import openrouter from "~/lib/open-router";
+import { grokOpenRouterProvider } from "~/lib/open-router";
+// import google from "~/lib/google-gemini";
 // import { UIMessage } from "@ai-sdk/react";
 
-export const Route = createFileRoute("/api/ai/chat/")({
+// export const grokOpenRouterProvider = openrouter.chat("x-ai/grok-code-fast-1");
+// openrouter.chat("x-ai/grok-code-fast-1");
+export const Route = createFileRoute("/api/ai/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
         const { messages }: { messages: UIMessage[] } = await request.json();
 
         const result = streamText({
-          model: openrouter.chat("x-ai/grok-code-fast-1"),
+          model: grokOpenRouterProvider,
           //    google.chat("gemini-2.5-pro"),
           //   openrouter.chat("anthropic/claude-sonnet-4.5"),
           //   openrouter.chat("x-ai/grok-code-fast-1"),
@@ -97,7 +99,7 @@ export const Route = createFileRoute("/api/ai/chat/")({
 //         </div>
 //         {/* Down arrow */}
 //         <svg
-//           className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+//           className={`h-4 w-4 transition-transform ${isOpen ? `rotate-180` : ``}`}
 //           viewBox="0 0 24 24"
 //           fill="none"
 //           stroke="currentColor"

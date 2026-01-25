@@ -23,53 +23,58 @@ import {
   MessageContent,
   MessageResponse,
 } from "~/components/ai-elements/message";
+import { ProjectsView } from "~/features/projects/components/projects-view";
+import { projectQueryOptions } from "~/features/projects/hooks/use-projects";
 
 export const Route = createFileRoute("/(main)/")({
   component: Home,
   pendingComponent: () => <Loader />,
   loader: async ({ context }) => {
     await Promise.all([
-      context.queryClient.ensureQueryData(
-        convexQuery(api.auth.getCurrentUser, {}),
-      ),
+      context.queryClient.ensureQueryData(authQueryOptions()),
       // Load multiple queries in parallel if needed
+
+      context.queryClient.prefetchQuery(
+        projectQueryOptions.getProjectsPartial(10),
+      ),
     ]);
   },
 });
 
 function Home() {
-  const { logOut } = useSignOut();
+  // const { logOut } = useSignOut();
+  // const { data: userToken } = useQuery(authQueryOptions());
 
-  const { data: userToken } = useQuery(authQueryOptions());
   return (
-    <div className="p-8 space-y-2">
-      {userToken ? (
-        <Fragment>
-          <div className="">
-            <Button className="font-mono ml-5" onClick={logOut}>
-              Log Out
-            </Button>
-          </div>
-          <Chat />
-        </Fragment>
-      ) : (
-        <Link to="/sign-in">
-          <Button className="font-mono">Sign In</Button>
-        </Link>
-      )}
+    <ProjectsView />
+    // <div className="p-8 space-y-2">
+    //   {userToken ? (
+    //     <Fragment>
+    //       <div className="">
+    //         <Button className="font-mono ml-5" onClick={logOut}>
+    //           Log Out
+    //         </Button>
+    //       </div>
+    //       {/* <Chat /> */}
+    //     </Fragment>
+    //   ) : (
+    //     <Link to="/sign-in">
+    //       <Button className="font-mono">Sign In</Button>
+    //     </Link>
+    //   )}
 
-      {/* <Authenticated>
-        <p className="text-yellow-600">
-          This text only shows up when the user is Authenticated
-        </p>
-      </Authenticated>
+    //   {/* <Authenticated>
+    //     <p className="text-yellow-600">
+    //       This text only shows up when the user is Authenticated
+    //     </p>
+    //   </Authenticated>
 
-      <Unauthenticated>
-        <p className="text-indigo-600">
-          This text only shows up when the user is UnAuthenticated
-        </p>
-      </Unauthenticated> */}
-    </div>
+    //   <Unauthenticated>
+    //     <p className="text-indigo-600">
+    //       This text only shows up when the user is UnAuthenticated
+    //     </p>
+    //   </Unauthenticated> */}
+    // </div>
   );
 }
 
