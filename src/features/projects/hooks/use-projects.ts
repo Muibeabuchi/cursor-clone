@@ -38,6 +38,21 @@ export const useCreateProjects = () => {
 
 export const useRenameProjectName = () => {
   return useMutation({
-    mutationFn: useConvexMutation(api.projects.renameProjectName),
+    mutationFn: useConvexMutation(
+      api.projects.renameProjectName,
+    ).withOptimisticUpdate((localStorage, variables) => {
+      const { projectId, name } = variables;
+      const project = localStorage.getQuery(api.projects.getById, {
+        projectId,
+      });
+      if (!project) return;
+      localStorage.setQuery(
+        api.projects.getById,
+        {
+          projectId,
+        },
+        { ...project, name },
+      );
+    }),
   });
 };
