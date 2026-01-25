@@ -13,6 +13,13 @@ import { cn } from "~/lib/utils";
 import { useGetProject, useRenameProjectName } from "../hooks/use-projects";
 import { useState } from "react";
 import { Input } from "~/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import { CloudCheckIcon, LoaderIcon } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 // import { Logo } from "~/components/logo";
 
 interface NavbarProps {
@@ -93,6 +100,23 @@ const Navbar = ({ projectId }: NavbarProps) => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+        {project.importStatus === "importing" ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <LoaderIcon className="size-4 text-muted-foreground animate-spin" />
+            </TooltipTrigger>
+            <TooltipContent>Importing...</TooltipContent>
+          </Tooltip>
+        ) : project.updatedAt ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <CloudCheckIcon className="size-4 text-muted-foreground " />
+            </TooltipTrigger>
+            <TooltipContent>
+              Saved {formatDistanceToNow(project.updatedAt)}{" "}
+            </TooltipContent>
+          </Tooltip>
+        ) : null}
       </div>
     </nav>
   );
