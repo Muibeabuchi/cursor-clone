@@ -9,37 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as mainIndexRouteImport } from './routes/(main)/index'
 import { Route as ApiInngestRouteRouteImport } from './routes/api/inngest/route'
+import { Route as mainMainLayoutRouteRouteImport } from './routes/(main)/_main-layout/route'
 import { Route as authAuthLayoutRouteRouteImport } from './routes/(auth)/_auth-layout/route'
+import { Route as mainMainLayoutIndexRouteImport } from './routes/(main)/_main-layout/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as mainProjectsProjectIdRouteImport } from './routes/(main)/projects.$projectId'
 import { Route as authAuthLayoutSignUpRouteImport } from './routes/(auth)/_auth-layout/sign-up'
 import { Route as authAuthLayoutSignInRouteImport } from './routes/(auth)/_auth-layout/sign-in'
 import { Route as ApiAiChatRouteRouteImport } from './routes/api/ai/chat/route'
+import { Route as mainMainLayoutProjectsProjectIdRouteImport } from './routes/(main)/_main-layout/projects.$projectId'
 
-const mainIndexRoute = mainIndexRouteImport.update({
-  id: '/(main)/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiInngestRouteRoute = ApiInngestRouteRouteImport.update({
   id: '/api/inngest',
   path: '/api/inngest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const mainMainLayoutRouteRoute = mainMainLayoutRouteRouteImport.update({
+  id: '/(main)/_main-layout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authAuthLayoutRouteRoute = authAuthLayoutRouteRouteImport.update({
   id: '/(auth)/_auth-layout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const mainMainLayoutIndexRoute = mainMainLayoutIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => mainMainLayoutRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const mainProjectsProjectIdRoute = mainProjectsProjectIdRouteImport.update({
-  id: '/(main)/projects/$projectId',
-  path: '/projects/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authAuthLayoutSignUpRoute = authAuthLayoutSignUpRouteImport.update({
@@ -57,90 +57,97 @@ const ApiAiChatRouteRoute = ApiAiChatRouteRouteImport.update({
   path: '/api/ai/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const mainMainLayoutProjectsProjectIdRoute =
+  mainMainLayoutProjectsProjectIdRouteImport.update({
+    id: '/projects/$projectId',
+    path: '/projects/$projectId',
+    getParentRoute: () => mainMainLayoutRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/api/inngest': typeof ApiInngestRouteRoute
-  '/': typeof mainIndexRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/sign-in': typeof authAuthLayoutSignInRoute
   '/sign-up': typeof authAuthLayoutSignUpRoute
-  '/projects/$projectId': typeof mainProjectsProjectIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/': typeof mainMainLayoutIndexRoute
+  '/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRoute
 }
 export interface FileRoutesByTo {
   '/api/inngest': typeof ApiInngestRouteRoute
-  '/': typeof mainIndexRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/sign-in': typeof authAuthLayoutSignInRoute
   '/sign-up': typeof authAuthLayoutSignUpRoute
-  '/projects/$projectId': typeof mainProjectsProjectIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/': typeof mainMainLayoutIndexRoute
+  '/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)/_auth-layout': typeof authAuthLayoutRouteRouteWithChildren
+  '/(main)/_main-layout': typeof mainMainLayoutRouteRouteWithChildren
   '/api/inngest': typeof ApiInngestRouteRoute
-  '/(main)/': typeof mainIndexRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/(auth)/_auth-layout/sign-in': typeof authAuthLayoutSignInRoute
   '/(auth)/_auth-layout/sign-up': typeof authAuthLayoutSignUpRoute
-  '/(main)/projects/$projectId': typeof mainProjectsProjectIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(main)/_main-layout/': typeof mainMainLayoutIndexRoute
+  '/(main)/_main-layout/projects/$projectId': typeof mainMainLayoutProjectsProjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/api/inngest'
-    | '/'
     | '/api/ai/chat'
     | '/sign-in'
     | '/sign-up'
-    | '/projects/$projectId'
     | '/api/auth/$'
+    | '/'
+    | '/projects/$projectId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/api/inngest'
-    | '/'
     | '/api/ai/chat'
     | '/sign-in'
     | '/sign-up'
-    | '/projects/$projectId'
     | '/api/auth/$'
+    | '/'
+    | '/projects/$projectId'
   id:
     | '__root__'
     | '/(auth)/_auth-layout'
+    | '/(main)/_main-layout'
     | '/api/inngest'
-    | '/(main)/'
     | '/api/ai/chat'
     | '/(auth)/_auth-layout/sign-in'
     | '/(auth)/_auth-layout/sign-up'
-    | '/(main)/projects/$projectId'
     | '/api/auth/$'
+    | '/(main)/_main-layout/'
+    | '/(main)/_main-layout/projects/$projectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   authAuthLayoutRouteRoute: typeof authAuthLayoutRouteRouteWithChildren
+  mainMainLayoutRouteRoute: typeof mainMainLayoutRouteRouteWithChildren
   ApiInngestRouteRoute: typeof ApiInngestRouteRoute
-  mainIndexRoute: typeof mainIndexRoute
   ApiAiChatRouteRoute: typeof ApiAiChatRouteRoute
-  mainProjectsProjectIdRoute: typeof mainProjectsProjectIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(main)/': {
-      id: '/(main)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof mainIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/inngest': {
       id: '/api/inngest'
       path: '/api/inngest'
       fullPath: '/api/inngest'
       preLoaderRoute: typeof ApiInngestRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(main)/_main-layout': {
+      id: '/(main)/_main-layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof mainMainLayoutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/_auth-layout': {
@@ -150,18 +157,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authAuthLayoutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(main)/_main-layout/': {
+      id: '/(main)/_main-layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof mainMainLayoutIndexRouteImport
+      parentRoute: typeof mainMainLayoutRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(main)/projects/$projectId': {
-      id: '/(main)/projects/$projectId'
-      path: '/projects/$projectId'
-      fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof mainProjectsProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/_auth-layout/sign-up': {
@@ -185,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAiChatRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(main)/_main-layout/projects/$projectId': {
+      id: '/(main)/_main-layout/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof mainMainLayoutProjectsProjectIdRouteImport
+      parentRoute: typeof mainMainLayoutRouteRoute
+    }
   }
 }
 
@@ -201,12 +215,24 @@ const authAuthLayoutRouteRouteChildren: authAuthLayoutRouteRouteChildren = {
 const authAuthLayoutRouteRouteWithChildren =
   authAuthLayoutRouteRoute._addFileChildren(authAuthLayoutRouteRouteChildren)
 
+interface mainMainLayoutRouteRouteChildren {
+  mainMainLayoutIndexRoute: typeof mainMainLayoutIndexRoute
+  mainMainLayoutProjectsProjectIdRoute: typeof mainMainLayoutProjectsProjectIdRoute
+}
+
+const mainMainLayoutRouteRouteChildren: mainMainLayoutRouteRouteChildren = {
+  mainMainLayoutIndexRoute: mainMainLayoutIndexRoute,
+  mainMainLayoutProjectsProjectIdRoute: mainMainLayoutProjectsProjectIdRoute,
+}
+
+const mainMainLayoutRouteRouteWithChildren =
+  mainMainLayoutRouteRoute._addFileChildren(mainMainLayoutRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   authAuthLayoutRouteRoute: authAuthLayoutRouteRouteWithChildren,
+  mainMainLayoutRouteRoute: mainMainLayoutRouteRouteWithChildren,
   ApiInngestRouteRoute: ApiInngestRouteRoute,
-  mainIndexRoute: mainIndexRoute,
   ApiAiChatRouteRoute: ApiAiChatRouteRoute,
-  mainProjectsProjectIdRoute: mainProjectsProjectIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

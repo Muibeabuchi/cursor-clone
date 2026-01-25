@@ -26,7 +26,7 @@ import {
 import { ProjectsView } from "~/features/projects/components/projects-view";
 import { projectQueryOptions } from "~/features/projects/hooks/use-projects";
 
-export const Route = createFileRoute("/(main)/")({
+export const Route = createFileRoute("/(main)/_main-layout/")({
   component: Home,
   pendingComponent: () => <Loader />,
   loader: async ({ context }) => {
@@ -46,7 +46,6 @@ function Home() {
   // const { data: userToken } = useQuery(authQueryOptions());
 
   return (
-    <ProjectsView />
     // <div className="p-8 space-y-2">
     //   {userToken ? (
     //     <Fragment>
@@ -62,20 +61,19 @@ function Home() {
     //       <Button className="font-mono">Sign In</Button>
     //     </Link>
     //   )}
-
     //   {/* <Authenticated>
     //     <p className="text-yellow-600">
     //       This text only shows up when the user is Authenticated
     //     </p>
     //   </Authenticated>
-
     //   <Unauthenticated>
     //     <p className="text-indigo-600">
     //       This text only shows up when the user is UnAuthenticated
     //     </p>
     //   </Unauthenticated> */}
     // </div>
-  );
+    <ProjectsView />
+  )
 }
 
 // import { createFileRoute } from '@tanstack/react-router';
