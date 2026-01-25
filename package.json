@@ -41,6 +41,7 @@
     "convex": "^1.31.5",
     "convex-helpers": "^0.1.111",
     "hono": "^4.11.5",
+    "inngest": "^3.49.3",
     "lucide-react": "^0.562.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
