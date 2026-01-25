@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import React from "react";
 import { LoginForm } from "~/components/login-form";
 
-export const Route = createFileRoute("/(auth)/sign-in")({
+export const Route = createFileRoute("/(auth)/_auth-layout/sign-in")({
   component: RouteComponent,
 });
 

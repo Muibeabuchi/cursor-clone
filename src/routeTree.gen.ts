@@ -10,11 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as mainIndexRouteImport } from './routes/(main)/index'
-import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
-import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as ApiInngestRouteRouteImport } from './routes/api/inngest/route'
+import { Route as authAuthLayoutRouteRouteImport } from './routes/(auth)/_auth-layout/route'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as mainProjectsProjectIdRouteImport } from './routes/(main)/projects.$projectId'
+import { Route as authAuthLayoutSignUpRouteImport } from './routes/(auth)/_auth-layout/sign-up'
+import { Route as authAuthLayoutSignInRouteImport } from './routes/(auth)/_auth-layout/sign-in'
 import { Route as ApiAiChatRouteRouteImport } from './routes/api/ai/chat/route'
 
 const mainIndexRoute = mainIndexRouteImport.update({
@@ -22,19 +23,13 @@ const mainIndexRoute = mainIndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authSignUpRoute = authSignUpRouteImport.update({
-  id: '/(auth)/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authSignInRoute = authSignInRouteImport.update({
-  id: '/(auth)/sign-in',
-  path: '/sign-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiInngestRouteRoute = ApiInngestRouteRouteImport.update({
   id: '/api/inngest',
   path: '/api/inngest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authAuthLayoutRouteRoute = authAuthLayoutRouteRouteImport.update({
+  id: '/(auth)/_auth-layout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -47,6 +42,16 @@ const mainProjectsProjectIdRoute = mainProjectsProjectIdRouteImport.update({
   path: '/projects/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authAuthLayoutSignUpRoute = authAuthLayoutSignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => authAuthLayoutRouteRoute,
+} as any)
+const authAuthLayoutSignInRoute = authAuthLayoutSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => authAuthLayoutRouteRoute,
+} as any)
 const ApiAiChatRouteRoute = ApiAiChatRouteRouteImport.update({
   id: '/api/ai/chat',
   path: '/api/ai/chat',
@@ -55,29 +60,30 @@ const ApiAiChatRouteRoute = ApiAiChatRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/api/inngest': typeof ApiInngestRouteRoute
-  '/sign-in': typeof authSignInRoute
-  '/sign-up': typeof authSignUpRoute
   '/': typeof mainIndexRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
+  '/sign-in': typeof authAuthLayoutSignInRoute
+  '/sign-up': typeof authAuthLayoutSignUpRoute
   '/projects/$projectId': typeof mainProjectsProjectIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/api/inngest': typeof ApiInngestRouteRoute
-  '/sign-in': typeof authSignInRoute
-  '/sign-up': typeof authSignUpRoute
   '/': typeof mainIndexRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
+  '/sign-in': typeof authAuthLayoutSignInRoute
+  '/sign-up': typeof authAuthLayoutSignUpRoute
   '/projects/$projectId': typeof mainProjectsProjectIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/(auth)/_auth-layout': typeof authAuthLayoutRouteRouteWithChildren
   '/api/inngest': typeof ApiInngestRouteRoute
-  '/(auth)/sign-in': typeof authSignInRoute
-  '/(auth)/sign-up': typeof authSignUpRoute
   '/(main)/': typeof mainIndexRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
+  '/(auth)/_auth-layout/sign-in': typeof authAuthLayoutSignInRoute
+  '/(auth)/_auth-layout/sign-up': typeof authAuthLayoutSignUpRoute
   '/(main)/projects/$projectId': typeof mainProjectsProjectIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -85,36 +91,36 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/api/inngest'
-    | '/sign-in'
-    | '/sign-up'
     | '/'
     | '/api/ai/chat'
+    | '/sign-in'
+    | '/sign-up'
     | '/projects/$projectId'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/api/inngest'
-    | '/sign-in'
-    | '/sign-up'
     | '/'
     | '/api/ai/chat'
+    | '/sign-in'
+    | '/sign-up'
     | '/projects/$projectId'
     | '/api/auth/$'
   id:
     | '__root__'
+    | '/(auth)/_auth-layout'
     | '/api/inngest'
-    | '/(auth)/sign-in'
-    | '/(auth)/sign-up'
     | '/(main)/'
     | '/api/ai/chat'
+    | '/(auth)/_auth-layout/sign-in'
+    | '/(auth)/_auth-layout/sign-up'
     | '/(main)/projects/$projectId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  authAuthLayoutRouteRoute: typeof authAuthLayoutRouteRouteWithChildren
   ApiInngestRouteRoute: typeof ApiInngestRouteRoute
-  authSignInRoute: typeof authSignInRoute
-  authSignUpRoute: typeof authSignUpRoute
   mainIndexRoute: typeof mainIndexRoute
   ApiAiChatRouteRoute: typeof ApiAiChatRouteRoute
   mainProjectsProjectIdRoute: typeof mainProjectsProjectIdRoute
@@ -130,25 +136,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof mainIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(auth)/sign-up': {
-      id: '/(auth)/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof authSignUpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/sign-in': {
-      id: '/(auth)/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof authSignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/inngest': {
       id: '/api/inngest'
       path: '/api/inngest'
       fullPath: '/api/inngest'
       preLoaderRoute: typeof ApiInngestRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/_auth-layout': {
+      id: '/(auth)/_auth-layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authAuthLayoutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -165,6 +164,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof mainProjectsProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(auth)/_auth-layout/sign-up': {
+      id: '/(auth)/_auth-layout/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authAuthLayoutSignUpRouteImport
+      parentRoute: typeof authAuthLayoutRouteRoute
+    }
+    '/(auth)/_auth-layout/sign-in': {
+      id: '/(auth)/_auth-layout/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authAuthLayoutSignInRouteImport
+      parentRoute: typeof authAuthLayoutRouteRoute
+    }
     '/api/ai/chat': {
       id: '/api/ai/chat'
       path: '/api/ai/chat'
@@ -175,10 +188,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface authAuthLayoutRouteRouteChildren {
+  authAuthLayoutSignInRoute: typeof authAuthLayoutSignInRoute
+  authAuthLayoutSignUpRoute: typeof authAuthLayoutSignUpRoute
+}
+
+const authAuthLayoutRouteRouteChildren: authAuthLayoutRouteRouteChildren = {
+  authAuthLayoutSignInRoute: authAuthLayoutSignInRoute,
+  authAuthLayoutSignUpRoute: authAuthLayoutSignUpRoute,
+}
+
+const authAuthLayoutRouteRouteWithChildren =
+  authAuthLayoutRouteRoute._addFileChildren(authAuthLayoutRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
+  authAuthLayoutRouteRoute: authAuthLayoutRouteRouteWithChildren,
   ApiInngestRouteRoute: ApiInngestRouteRoute,
-  authSignInRoute: authSignInRoute,
-  authSignUpRoute: authSignUpRoute,
   mainIndexRoute: mainIndexRoute,
   ApiAiChatRouteRoute: ApiAiChatRouteRoute,
   mainProjectsProjectIdRoute: mainProjectsProjectIdRoute,

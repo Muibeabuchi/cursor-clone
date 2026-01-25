@@ -14,6 +14,7 @@ export const getPartial = authenticatedQuery({
     const projects = await ctx.db
       .query("projects")
       .withIndex("by_owner_id", (q) => q.eq("ownerId", userId))
+      .order("desc")
       .take(args.limit);
 
     return projects;
@@ -26,6 +27,7 @@ export const get = authenticatedQuery({
     const projects = await ctx.db
       .query("projects")
       .withIndex("by_owner_id", (q) => q.eq("ownerId", ctx.user._id))
+      .order("desc")
       .collect();
     return projects;
   },
