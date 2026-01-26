@@ -22,7 +22,7 @@ export const useProjectsPartial = (limit: number) => {
   });
 };
 
-export const useGetProject = (projectId: Id<"projects">) => {
+export const useGetProjectById = (projectId: Id<"projects">) => {
   return useSuspenseQuery({
     ...projectQueryOptions.getById(projectId),
   });

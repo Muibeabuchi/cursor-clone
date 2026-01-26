@@ -3,22 +3,33 @@ import { Id } from "convex/_generated/dataModel";
 import { projectQueryOptions } from "~/features/projects/hooks/use-projects";
 import { LoadingIndicator } from "~/components/Loader";
 import ProjectIdLayout from "~/features/projects/components/project-id-layout";
+import ProjectIdView from "~/features/projects/components/project-id-view";
+
+import { zodValidator } from "@tanstack/zod-adapter";
+import { z } from "zod";
+
+const activeViewSchema = z.object({
+  activeView: z.union([z.literal("code"), z.literal("preview")]).catch("code"),
+});
+
+export type activeViewType = z.infer<typeof activeViewSchema>["activeView"];
 
 export const Route = createFileRoute(
   "/(main)/_main-layout/projects/$projectId/",
 )({
   component: RouteComponent,
-  // async loader({ context, params }) {
-  //   const projectId = params.projectId;
-  //   const project = await context.queryClient.ensureQueryData(
-  //     projectQueryOptions.getOne(projectId),
-  //   );
-  //   return project;
-  // },
+  validateSearch: zodValidator(activeViewSchema),
+  async loader({ context, params }) {
+    const projectId = params.projectId;
+    await context.queryClient.ensureQueryData(
+      projectQueryOptions.getById(projectId),
+    );
+  },
   pendingComponent: () => <LoadingIndicator />,
 });
 
 function RouteComponent() {
   const { projectId } = Route.useParams();
-  return <p>Index component in the {projectId} page</p>;
+  const { activeView } = Route.useSearch();
+  return <ProjectIdView projectId={projectId} activeView={activeView} />;
 }

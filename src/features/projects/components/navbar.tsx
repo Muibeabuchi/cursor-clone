@@ -10,9 +10,8 @@ import {
 import { Link } from "@tanstack/react-router";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { useGetProject, useRenameProjectName } from "../hooks/use-projects";
+import { useGetProjectById, useRenameProjectName } from "../hooks/use-projects";
 import { useState } from "react";
-import { Input } from "~/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
@@ -21,13 +20,14 @@ import {
 import { CloudCheckIcon, LoaderIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 // import { Logo } from "~/components/logo";
+// import { Input } from "~/components/ui/input";
 
 interface NavbarProps {
   projectId: Id<"projects">;
 }
 
 const Navbar = ({ projectId }: NavbarProps) => {
-  const { data: project } = useGetProject(projectId);
+  const { data: project } = useGetProjectById(projectId);
   const { mutateAsync: renameProjectName } = useRenameProjectName();
   const [name, setName] = useState(project?.name || "New Project");
   const [isRenaming, setIsRenaming] = useState(false);
@@ -80,7 +80,7 @@ const Navbar = ({ projectId }: NavbarProps) => {
             {/* <BreadcrumbSeparator /> */}
             <BreadcrumbItem>
               {isRenaming ? (
-                <Input
+                <input
                   autoFocus
                   value={name}
                   onChange={(e) => setName(e.target.value)}
