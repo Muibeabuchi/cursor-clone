@@ -9,12 +9,15 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as controller_files from "../controller/files.js";
+import type * as controller_projects from "../controller/projects.js";
 import type * as http from "../http.js";
 import type * as middleware_authMiddleware from "../middleware/authMiddleware.js";
+import type * as middleware_fileMiddleware from "../middleware/fileMiddleware.js";
 import type * as middleware_projectMiddleware from "../middleware/projectMiddleware.js";
 import type * as models_authModel from "../models/authModel.js";
+import type * as models_fileModel from "../models/fileModel.js";
 import type * as models_projectModel from "../models/projectModel.js";
-import type * as projects from "../projects.js";
 
 import type {
   ApiFromModules,
@@ -24,12 +27,15 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  "controller/files": typeof controller_files;
+  "controller/projects": typeof controller_projects;
   http: typeof http;
   "middleware/authMiddleware": typeof middleware_authMiddleware;
+  "middleware/fileMiddleware": typeof middleware_fileMiddleware;
   "middleware/projectMiddleware": typeof middleware_projectMiddleware;
   "models/authModel": typeof models_authModel;
+  "models/fileModel": typeof models_fileModel;
   "models/projectModel": typeof models_projectModel;
-  projects: typeof projects;
 }>;
 
 /**

@@ -4,6 +4,9 @@ import { type Infer, v } from "convex/values";
 const importStatus = v.optional(
   v.union(v.literal("importing"), v.literal("completed"), v.literal("failed")),
 );
+
+const fileType = v.union(v.literal("file"), v.literal("folder"));
+
 const exportStatus = v.optional(
   v.union(
     v.literal("exporting"),
@@ -12,6 +15,21 @@ const exportStatus = v.optional(
     v.literal("cancelled"),
   ),
 );
+
+const filesTable = defineTable({
+  projectId: v.id("projects"),
+  parentId: v.optional(v.id("files")),
+  fileName: v.string(),
+  fileType,
+  // Text files only
+  content: v.optional(v.string()),
+  // Binary files only
+  storageId: v.optional(v.id("_storage")),
+  updatedAt: v.number(),
+})
+  .index("by_project", ["projectId"])
+  .index("by_parent", ["parentId"])
+  .index("by_project_parent", ["projectId", "parentId"]);
 
 const projectsTable = defineTable({
   name: v.string(),
@@ -25,6 +43,7 @@ const projectsTable = defineTable({
 
 const schema = defineSchema({
   projects: projectsTable,
+  files: filesTable,
 });
 export default schema;
 

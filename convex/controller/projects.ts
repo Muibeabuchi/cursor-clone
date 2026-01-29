@@ -1,11 +1,11 @@
 import {
   authorizedProjectMutation,
   authorizedProjectQuery,
-} from "./middleware/projectMiddleware";
+} from "../middleware/projectMiddleware";
 import {
   authenticatedMutation,
   authenticatedQuery,
-} from "./middleware/authMiddleware";
+} from "../middleware/authMiddleware";
 import { ConvexError, v } from "convex/values";
 
 export const getPartial = authenticatedQuery({

@@ -1,7 +1,7 @@
-import { convexQuery } from "@convex-dev/react-query";
-import { useQuery } from "@tanstack/react-query";
+// import { convexQuery } from "@convex-dev/react-query";
+// import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { api } from "convex/_generated/api";
+// import { api } from "convex/_generated/api";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { Button } from "~/components/ui/button";
 import { useSignOut } from "~/hooks/useAuthMethods";
@@ -25,6 +25,7 @@ import {
 import { ProjectsView } from "~/features/projects/components/projects-view";
 import { projectQueryOptions } from "~/features/projects/hooks/use-projects";
 import { LoadingIndicator } from "~/components/Loader";
+// import { api } from "convex/_generated/api";
 
 export const Route = createFileRoute("/(main)/_main-layout/")({
   component: Home,
@@ -43,7 +44,14 @@ export const Route = createFileRoute("/(main)/_main-layout/")({
 
 function Home() {
   // const { logOut } = useSignOut();
-  // const { data: userToken } = useQuery(authQueryOptions());
+  // import { api } from "convex/_generated/api";
+  // const { data: files } = useQuery(
+  //   convexQuery(api.controller.files.getFolderContents, {}),
+  //   // {
+  //   //   projectId: "",
+
+  //   // },
+  // );
 
   return (
     // <div className="p-8 space-y-2">
