@@ -20,7 +20,7 @@ export const authorizedProjectMutation = customMutation(mutation, {
     if (project.ownerId !== user._id) {
       throw new ConvexError("Unauthorized access to this project");
     }
-    return { ctx: { project }, args: {} };
+    return { ctx: { project }, args: { projectId: args.projectId } };
   },
 });
 
@@ -36,6 +36,6 @@ export const authorizedProjectQuery = customQuery(query, {
     if (project.ownerId !== user._id) {
       throw new ConvexError("Unauthorized access to this project");
     }
-    return { ctx: { project }, args: {} };
+    return { ctx: { project }, args: { projectId: args.projectId } };
   },
 });

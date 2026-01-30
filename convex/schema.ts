@@ -6,6 +6,7 @@ const importStatus = v.optional(
 );
 
 const fileType = v.union(v.literal("file"), v.literal("folder"));
+export type FileType = Infer<typeof fileType>;
 
 const exportStatus = v.optional(
   v.union(

@@ -48,7 +48,6 @@ export const getById = authorizedProjectQuery({
 
 export const renameProjectName = authorizedProjectMutation({
   args: {
-    projectId: v.id("projects"),
     name: v.string(),
   },
   async handler(ctx, args) {

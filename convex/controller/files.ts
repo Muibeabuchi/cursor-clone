@@ -49,6 +49,8 @@ export const getFolderContents = authorizedProjectQuery({
       )
       .collect();
 
+    console.log({ files });
+
     // sort: folders first, then files,alphabetically within each group
     const sortedFiles = files.sort((a, b) => {
       if (a.fileType === "folder" && b.fileType === "file") {
@@ -68,19 +70,16 @@ export const getFolderContents = authorizedProjectQuery({
 
 export const createFile = authorizedProjectMutation({
   args: {
-    projectId: v.id("projects"),
+    // projectId: v.id("projects"),
     parentFolderId: v.optional(v.id("files")),
     fileName: v.string(),
     content: v.string(),
   },
-  async handler(
-    { project, db },
-    { projectId, parentFolderId, fileName, content },
-  ) {
+  async handler({ project, db }, { parentFolderId, fileName, content }) {
     const files = await db
       .query("files")
       .withIndex("by_project_parent", (q) =>
-        q.eq("projectId", projectId).eq("parentId", parentFolderId),
+        q.eq("projectId", project._id).eq("parentId", parentFolderId),
       )
       .collect();
 
@@ -102,8 +101,10 @@ export const createFile = authorizedProjectMutation({
       throw new ConvexError("File already exists");
     }
 
+    console.log({ projectId: project._id });
+
     const file = await db.insert("files", {
-      projectId,
+      projectId: project._id,
       parentId: parentFolderId,
       fileName,
       fileType: "file",
@@ -116,15 +117,14 @@ export const createFile = authorizedProjectMutation({
 
 export const createFolder = authorizedProjectMutation({
   args: {
-    projectId: v.id("projects"),
     parentFolderId: v.optional(v.id("files")),
     folderName: v.string(),
   },
-  async handler({ project, db }, { projectId, parentFolderId, folderName }) {
+  async handler({ project, db }, { parentFolderId, folderName }) {
     const files = await db
       .query("files")
       .withIndex("by_project_parent", (q) =>
-        q.eq("projectId", projectId).eq("parentId", parentFolderId),
+        q.eq("projectId", project._id).eq("parentId", parentFolderId),
       )
       .collect();
 
@@ -146,15 +146,19 @@ export const createFolder = authorizedProjectMutation({
       throw new ConvexError("Folder already exists");
     }
 
+    console.log({ projectId: project._id });
+
+    // console.log({ projectId: file.projectId });
+
     const folder = await db.insert("files", {
-      projectId,
+      projectId: project._id,
       parentId: parentFolderId,
       fileName: folderName,
       fileType: "folder",
       updatedAt: Date.now(),
     });
 
-    await db.patch("projects", projectId, {
+    await db.patch("projects", project._id, {
       updatedAt: Date.now(),
     });
 

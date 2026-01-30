@@ -23,7 +23,6 @@ export const Route = createFileRoute(
     if (!project) {
       throw notFound();
     }
-    return project;
   },
   pendingComponent: () => <LoadingIndicator />,
 });

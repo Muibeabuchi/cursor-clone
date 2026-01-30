@@ -4,6 +4,14 @@ import { cn } from "~/lib/utils";
 import { activeViewType } from "~/routes/(main)/_main-layout/projects.$projectId.index";
 import { useNavigate } from "@tanstack/react-router";
 import { FaGithub } from "react-icons/fa";
+import { Allotment } from "allotment";
+import { FileExplorer } from "./file-explorer";
+
+// const
+const MIN_SIDEBAR_WIDTH = 200;
+const MAX_SIDEBAR_WIDTH = 800;
+const DEFAULT_SIDEBAR_WIDTH = 350;
+const DEFAULT_MAIN_SIZE = 1000;
 
 const Tab = ({
   label,
@@ -76,7 +84,25 @@ const ProjectIdView = ({
             activeView === "code" ? "visible" : "invisible",
           )}
         >
-          <div className="">Editor</div>
+          <Allotment defaultSizes={[DEFAULT_SIDEBAR_WIDTH, DEFAULT_MAIN_SIZE]}>
+            <Allotment.Pane
+              snap
+              minSize={MIN_SIDEBAR_WIDTH}
+              maxSize={MAX_SIDEBAR_WIDTH}
+              preferredSize={DEFAULT_SIDEBAR_WIDTH}
+            >
+              <FileExplorer project={project} />
+            </Allotment.Pane>
+            <Allotment.Pane
+            // snap
+            // minSize={MIN_MAIN_SIZE}
+            // maxSize={MAX_MAIN_SIZE}
+            // defaultSize={DEFAULT_MAIN_SIZE}
+            >
+              <div>Editor View</div>
+            </Allotment.Pane>
+          </Allotment>
+          {/* <div className="">Editor</div> */}
         </div>
 
         <div

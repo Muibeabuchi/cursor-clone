@@ -4,11 +4,11 @@ import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 
 export const projectQueryOptions = {
-  getProjects: convexQuery(api.projects.get, {}),
+  getProjects: convexQuery(api.controller.projects.get, {}),
   getProjectsPartial: (limit: number) =>
-    convexQuery(api.projects.getPartial, { limit }),
+    convexQuery(api.controller.projects.getPartial, { limit }),
   getById: (projectId: Id<"projects">) =>
-    convexQuery(api.projects.getById, { projectId }),
+    convexQuery(api.controller.projects.getById, { projectId }),
 };
 
 export const useProjects = () =>
@@ -32,22 +32,22 @@ export const useGetProjectById = (projectId: Id<"projects">) => {
 
 export const useCreateProjects = () => {
   return useMutation({
-    mutationFn: useConvexMutation(api.projects.create),
+    mutationFn: useConvexMutation(api.controller.projects.create),
   });
 };
 
 export const useRenameProjectName = () => {
   return useMutation({
     mutationFn: useConvexMutation(
-      api.projects.renameProjectName,
+      api.controller.projects.renameProjectName,
     ).withOptimisticUpdate((localStorage, variables) => {
       const { projectId, name } = variables;
-      const project = localStorage.getQuery(api.projects.getById, {
+      const project = localStorage.getQuery(api.controller.projects.getById, {
         projectId,
       });
       if (!project) return;
       localStorage.setQuery(
-        api.projects.getById,
+        api.controller.projects.getById,
         {
           projectId,
         },
