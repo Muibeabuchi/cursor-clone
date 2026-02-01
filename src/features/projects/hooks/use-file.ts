@@ -54,3 +54,15 @@ export const useCreateFolder = () => {
     mutationFn: useConvexMutation(api.controller.files.createFolder),
   });
 };
+
+export const useUpdateFile = () => {
+  return useMutation({
+    mutationFn: useConvexMutation(api.controller.files.updateFile),
+  });
+};
+
+export const useDeleteFile = () => {
+  return useMutation({
+    mutationFn: useConvexMutation(api.controller.files.deleteFile),
+  });
+};

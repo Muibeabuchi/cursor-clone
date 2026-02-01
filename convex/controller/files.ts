@@ -49,8 +49,6 @@ export const getFolderContents = authorizedProjectQuery({
       )
       .collect();
 
-    console.log({ files });
-
     // sort: folders first, then files,alphabetically within each group
     const sortedFiles = files.sort((a, b) => {
       if (a.fileType === "folder" && b.fileType === "file") {

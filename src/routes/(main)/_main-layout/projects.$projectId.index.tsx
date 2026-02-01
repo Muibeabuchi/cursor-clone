@@ -1,8 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Id } from "convex/_generated/dataModel";
 import { projectQueryOptions } from "~/features/projects/hooks/use-projects";
 import { LoadingIndicator } from "~/components/Loader";
-import ProjectIdLayout from "~/features/projects/components/project-id-layout";
 import ProjectIdView from "~/features/projects/components/project-id-view";
 
 import { zodValidator } from "@tanstack/zod-adapter";

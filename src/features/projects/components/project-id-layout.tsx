@@ -2,6 +2,8 @@ import { Id } from "convex/_generated/dataModel";
 import Navbar from "./navbar";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
+import { ClientOnly } from "@tanstack/react-router";
+import { ProjectIdPageSkeleton } from "~/components/ProjectIdPageSkeleton";
 
 const paneConstants = {
   Min_SIDEBAR_WIDTH: 200,
@@ -20,26 +22,28 @@ const ProjectIdLayout = ({
   return (
     <div className="w-full h-screen flex flex-col">
       <Navbar projectId={projectId} />
-      <div className="flex-1 flex overflow-hidden">
-        <Allotment
-          className="flex-1"
-          defaultSizes={[
-            paneConstants.DEFAULT_CONVERSATION_SIDEBAR_WIDTH,
-            paneConstants.DEFAULT_MAIN_WIDTH,
-          ]}
-        >
-          <Allotment.Pane
-            snap
-            minSize={paneConstants.Min_SIDEBAR_WIDTH}
-            maxSize={paneConstants.Max_SIDEBAR_WIDTH}
-            preferredSize={paneConstants.DEFAULT_CONVERSATION_SIDEBAR_WIDTH}
+      <ClientOnly fallback={<ProjectIdPageSkeleton />}>
+        <div className="flex-1 flex overflow-hidden">
+          <Allotment
+            className="flex-1"
+            defaultSizes={[
+              paneConstants.DEFAULT_CONVERSATION_SIDEBAR_WIDTH,
+              paneConstants.DEFAULT_MAIN_WIDTH,
+            ]}
           >
-            <div className="">SideBar</div>
-            {/* <Sidebar /> */}
-          </Allotment.Pane>
-          <Allotment.Pane>{children}</Allotment.Pane>
-        </Allotment>
-      </div>
+            <Allotment.Pane
+              snap
+              minSize={paneConstants.Min_SIDEBAR_WIDTH}
+              maxSize={paneConstants.Max_SIDEBAR_WIDTH}
+              preferredSize={paneConstants.DEFAULT_CONVERSATION_SIDEBAR_WIDTH}
+            >
+              <div className="">SideBar</div>
+              {/* <Sidebar /> */}
+            </Allotment.Pane>
+            <Allotment.Pane>{children}</Allotment.Pane>
+          </Allotment>
+        </div>
+      </ClientOnly>
     </div>
   );
 };

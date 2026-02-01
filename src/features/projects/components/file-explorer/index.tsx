@@ -16,6 +16,7 @@ import {
 } from "../../hooks/use-file";
 import CreateInput from "./create-input";
 import { LoadingRow } from "./loading-row";
+import { Tree } from "./tree";
 
 export function FileExplorer({ project }: { project: Doc<"projects"> }) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -123,6 +124,14 @@ export function FileExplorer({ project }: { project: Doc<"projects"> }) {
             )}
           </>
         )}
+        {folderContents?.map((item) => (
+          <Tree
+            key={`${item._id}-${collapseKey}`}
+            item={item}
+            level={0}
+            projectId={project._id}
+          />
+        ))}
       </ScrollArea>
     </div>
   );
