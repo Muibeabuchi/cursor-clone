@@ -28,7 +28,7 @@ export function FileExplorer({ project }: { project: Doc<"projects"> }) {
   const { data: folderContents, isLoading } = useFolderContents({
     // parentFolderId,
     projectId: project._id,
-    enabled: !isExpanded,
+    enabled: isExpanded,
   });
 
   const createFile = useCreateFile();
@@ -36,9 +36,6 @@ export function FileExplorer({ project }: { project: Doc<"projects"> }) {
 
   const handleCreate = async (name: string) => {
     setCreating(null);
-
-    console.log({ projectId: project._id });
-
     if (creating === "file") {
       await createFile.mutateAsync({
         fileName: name,
@@ -75,8 +72,8 @@ export function FileExplorer({ project }: { project: Doc<"projects"> }) {
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                setIsExpanded(true);
                 setCreating("file");
+                setIsExpanded(true);
               }}
               variant={"highlight"}
               size={"icon-xs"}
@@ -88,8 +85,8 @@ export function FileExplorer({ project }: { project: Doc<"projects"> }) {
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                setIsExpanded(true);
                 setCreating("folder");
+                setIsExpanded(true);
               }}
               variant={"highlight"}
               size={"icon-xs"}

@@ -7,6 +7,7 @@ import {
   useFolderContents,
   useUpdateFile,
   useDeleteFile,
+  useRenameFile,
 } from "../../hooks/use-file";
 import { getPadding } from "./constants";
 import { LoadingRow } from "./loading-row";
@@ -15,6 +16,8 @@ import { useState } from "react";
 import { FileType } from "convex/schema";
 import { TreeItemWrapper } from "./tree-item-wrapper";
 import { FileIcon, FolderIcon } from "@react-symbols/icons/utils";
+import CreateInput from "./create-input";
+import RenameInput from "./rename-input";
 
 export function Tree({
   item,
@@ -33,6 +36,7 @@ export function Tree({
   const createFolder = useCreateFolder();
   const updateFile = useUpdateFile();
   const deleteFile = useDeleteFile();
+  const renameFile = useRenameFile();
 
   const folderContents = useFolderContents({
     parentFolderId: item._id,
@@ -50,14 +54,108 @@ export function Tree({
     setCreating(null);
   };
 
+  const handleCreate = (name: string) => {
+    if (creating === "file") {
+      createFile.mutate({
+        fileName: name,
+        content: "",
+        parentFolderId: item._id,
+        projectId,
+      });
+    } else {
+      createFolder.mutate({
+        folderName: name,
+        parentFolderId: item._id,
+        projectId,
+      });
+    }
+    setCreating(null);
+    // stopCreating();
+  };
+
+  const handleRename = (name: string) => {
+    setIsRenaming(false);
+    if (name === item.fileName) {
+      return;
+    }
+
+    renameFile.mutate({
+      fileId: item._id,
+      newFileName: name,
+    });
+  };
+
+  const FolderContent = (
+    <>
+      <div className="flex items-center gap-0.5">
+        <ChevronRightIcon
+          className={cn(
+            "size-4 shrink-0 text-muted-foreground",
+            isOpen && "rotate-90",
+          )}
+        />
+        <FolderIcon className="size-4" folderName={item.fileName} />
+      </div>
+      <span className="truncate text-sm">{item.fileName}</span>
+    </>
+  );
+
+  if (creating) {
+    return (
+      <>
+        <button
+          className="group flex items-center gap-1 h-5.5 hover:bg-accent/30 w-full"
+          onClick={() => setIsOpen((val) => !val)}
+          style={{ paddingLeft: getPadding({ level, isFile: false }) }}
+        >
+          {FolderContent}
+        </button>
+        {isOpen && folderContents.isLoading ? (
+          <LoadingRow level={level + 1} />
+        ) : (
+          <>
+            <CreateInput
+              type={creating}
+              level={level + 1}
+              onSubmit={(name) => handleCreate(name)}
+              onCancel={stopCreating}
+            />
+          </>
+        )}
+
+        {isOpen &&
+          !folderContents.isLoading &&
+          folderContents.data?.map((child) => (
+            <Tree
+              key={child._id}
+              item={child}
+              level={level + 1}
+              projectId={projectId}
+            />
+          ))}
+      </>
+    );
+  }
+
   if (item.fileType === "folder") {
-    const folderName = item.fileName;
+    if (isRenaming) {
+      return (
+        <RenameInput
+          onSubmit={handleRename}
+          onCancel={() => setIsRenaming(false)}
+          type="folder"
+          level={level}
+          defaultValue={item.fileName}
+          isOpen={isOpen}
+        />
+      );
+    }
     return (
       <>
         <TreeItemWrapper
           item={item}
           level={level}
-          onClick={() => {}}
+          onClick={() => setIsOpen((val) => !val)}
           onDelete={() =>
             // close tab
             deleteFile.mutate({
@@ -71,46 +169,58 @@ export function Tree({
           projectId={projectId}
           isActive={false}
         >
-          <>
-            <div className="flex items-center gap-0.5">
-              <ChevronRightIcon
-                className={cn(
-                  "size-4 shrink-0 text-muted-foreground",
-                  isOpen && "rotate-90",
-                )}
-              />
-              <FolderIcon className="size-4" folderName={folderName} />
-            </div>
-            <span className="truncate text-sm">{folderName}</span>
-          </>
+          {FolderContent}
         </TreeItemWrapper>
+        {isOpen && folderContents.isLoading && <LoadingRow level={level + 1} />}
+        {isOpen &&
+          !folderContents.isLoading &&
+          folderContents.data?.map((child) => (
+            <Tree
+              key={child._id}
+              item={child}
+              level={level + 1}
+              projectId={projectId}
+            />
+          ))}
       </>
     );
   }
 
-  //   if (item.fileType === "file") {
-  const fileName = item.fileName;
-  return (
-    <TreeItemWrapper
-      item={item}
-      level={level}
-      onClick={() => {}}
-      onDelete={() =>
-        // close tab
-        deleteFile.mutate({
-          fileId: item._id,
-        })
-      }
-      onDoubleClick={() => {}}
-      onRename={() => setIsRenaming(true)}
-      projectId={projectId}
-      isActive={false}
-      // onCreateFile={() => setCreating("file")}
-      // onCreateFolder={() => setCreating("folder")}
-    >
-      <FileIcon className="size-4" fileName={fileName} />
-      <span className="truncate">{fileName}</span>
-    </TreeItemWrapper>
-  );
-  //   }
+  if (item.fileType === "file") {
+    if (isRenaming) {
+      return (
+        <RenameInput
+          onSubmit={handleRename}
+          onCancel={() => setIsRenaming(false)}
+          type="file"
+          level={level}
+          defaultValue={item.fileName}
+          isOpen={isOpen}
+        />
+      );
+    }
+    const fileName = item.fileName;
+    return (
+      <TreeItemWrapper
+        item={item}
+        level={level}
+        onClick={() => {}}
+        onDelete={() =>
+          // close tab
+          deleteFile.mutate({
+            fileId: item._id,
+          })
+        }
+        onDoubleClick={() => {}}
+        onRename={() => setIsRenaming(true)}
+        projectId={projectId}
+        isActive={false}
+        // onCreateFile={() => setCreating("file")}
+        // onCreateFolder={() => setCreating("folder")}
+      >
+        <FileIcon className="size-4" fileName={fileName} />
+        <span className="truncate">{fileName}</span>
+      </TreeItemWrapper>
+    );
+  }
 }

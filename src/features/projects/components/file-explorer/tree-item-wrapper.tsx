@@ -81,15 +81,19 @@ export function TreeItemWrapper({
           </>
         )}
 
-        <ContextMenuItem onClick={onRename}>
+        <ContextMenuItem onClick={onRename} className="text-xs truncate">
           Rename...
-          <ContextMenuShortcut>Enter</ContextMenuShortcut>
+          <ContextMenuShortcut className="text-xs truncate">
+            Enter
+          </ContextMenuShortcut>
         </ContextMenuItem>
-        <ContextMenuItem onClick={onDelete}>
+        <ContextMenuItem onClick={onDelete} className="text-xs truncate">
           Delete Permanently
-          <ContextMenuShortcut> CTRL + Backspace</ContextMenuShortcut>
+          <ContextMenuShortcut className="text-xs truncate">
+            ⌘+⌫
+          </ContextMenuShortcut>
         </ContextMenuItem>
-        <ContextMenuSeparator />
+        {/* <ContextMenuSeparator />
         <ContextMenuItem onClick={onCreateFile}>
           Create File
           <ContextMenuShortcut>Ctrl+N</ContextMenuShortcut>
@@ -97,7 +101,7 @@ export function TreeItemWrapper({
         <ContextMenuItem onClick={onCreateFolder}>
           Create Folder
           <ContextMenuShortcut>Ctrl+Shift+N</ContextMenuShortcut>
-        </ContextMenuItem>
+        </ContextMenuItem> */}
       </ContextMenuContent>
     </ContextMenu>
   );

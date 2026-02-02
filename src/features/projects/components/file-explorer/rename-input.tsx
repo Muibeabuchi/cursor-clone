@@ -10,10 +10,19 @@ interface CreateInputProps {
   onCancel: () => void;
   type: FileType;
   level: number;
+  defaultValue: string;
+  isOpen?: boolean;
 }
 
-const CreateInput = ({ level, onCancel, onSubmit, type }: CreateInputProps) => {
-  const [value, setValue] = useState("");
+const RenameInput = ({
+  level,
+  onCancel,
+  onSubmit,
+  type,
+  defaultValue,
+  isOpen,
+}: CreateInputProps) => {
+  const [value, setValue] = useState(defaultValue);
   const handleSubmit = () => {
     const trimmedValue = value.trim();
     if (trimmedValue) {
@@ -29,7 +38,12 @@ const CreateInput = ({ level, onCancel, onSubmit, type }: CreateInputProps) => {
     >
       <div className="flex items-center gap-0.5">
         {type === "folder" && (
-          <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground" />
+          <ChevronRightIcon
+            className={cn(
+              "size-4 shrink-0 text-muted-foreground",
+              isOpen && "rotate-90",
+            )}
+          />
         )}
         {type === "file" && (
           <FileIcon fileName={value} className="size-4 " autoAssign />
@@ -50,6 +64,19 @@ const CreateInput = ({ level, onCancel, onSubmit, type }: CreateInputProps) => {
           if (e.key === "Enter") handleSubmit();
           if (e.key === "Escape") onCancel();
         }}
+        onFocus={(e) => {
+          if (type === "folder") {
+            e.currentTarget.select();
+          } else {
+            const value = e.currentTarget.value;
+            const lastDotIndex = value.lastIndexOf(".");
+            if (lastDotIndex !== -1) {
+              e.currentTarget.setSelectionRange(0, lastDotIndex);
+            } else {
+              e.currentTarget.select();
+            }
+          }
+        }}
       />
       {/* <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground" /> */}
       {/* <p className="text-xs uppercase line-clamp-1">{project.name}</p> */}
@@ -57,4 +84,4 @@ const CreateInput = ({ level, onCancel, onSubmit, type }: CreateInputProps) => {
   );
 };
 
-export default CreateInput;
+export default RenameInput;
