@@ -17,7 +17,7 @@ const CreateInput = ({ level, onCancel, onSubmit, type }: CreateInputProps) => {
   const handleSubmit = () => {
     const trimmedValue = value.trim();
     if (trimmedValue) {
-      onSubmit(value);
+      onSubmit(trimmedValue);
     } else {
       onCancel();
     }

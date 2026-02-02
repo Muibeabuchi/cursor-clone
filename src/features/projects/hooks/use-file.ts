@@ -155,6 +155,46 @@ export const useDeleteFile = () => {
 
 export const useRenameFile = () => {
   return useMutation({
-    mutationFn: useConvexMutation(api.controller.files.renameFile),
+    mutationFn: useConvexMutation(
+      api.controller.files.renameFile,
+    ).withOptimisticUpdate((localStorage, variables) => {
+      const { fileId, newFileName, projectId, parentFolderId } = variables;
+      const data = localStorage.getQuery(
+        api.controller.files.getFolderContents,
+        {
+          projectId,
+          parentFolderId,
+        },
+      );
+      if (!data) return;
+
+      // find the file and update its content
+
+      const filteredData = data.map((file) => {
+        if (file._id === fileId) {
+          return { ...file, fileName: newFileName };
+        }
+        return file;
+      });
+
+      const sortedData = filteredData.sort((a, b) => {
+        if (a.fileType === "folder" && b.fileType === "file") {
+          return -1;
+        }
+        if (a.fileType === "file" && b.fileType === "folder") {
+          return 1;
+        }
+        return a.fileName.localeCompare(b.fileName);
+      });
+
+      localStorage.setQuery(
+        api.controller.files.getFolderContents,
+        {
+          projectId,
+          parentFolderId,
+        },
+        sortedData,
+      );
+    }),
   });
 };

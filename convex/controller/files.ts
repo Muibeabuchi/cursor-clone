@@ -144,10 +144,6 @@ export const createFolder = authorizedProjectMutation({
       throw new ConvexError("Folder already exists");
     }
 
-    console.log({ projectId: project._id });
-
-    // console.log({ projectId: file.projectId });
-
     const folder = await db.insert("files", {
       projectId: project._id,
       parentId: parentFolderId,
@@ -168,6 +164,9 @@ export const renameFile = authorizedFileMutation({
   args: {
     fileId: v.id("files"),
     newFileName: v.string(),
+    //  neccessary for optimistic updates
+    projectId: v.id("projects"),
+    parentFolderId: v.optional(v.id("files")),
   },
   async handler({ file, db }, { fileId, newFileName }) {
     // check if a file with the new already exists in the parent folder

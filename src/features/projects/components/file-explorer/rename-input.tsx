@@ -24,12 +24,8 @@ const RenameInput = ({
 }: CreateInputProps) => {
   const [value, setValue] = useState(defaultValue);
   const handleSubmit = () => {
-    const trimmedValue = value.trim();
-    if (trimmedValue) {
-      onSubmit(value);
-    } else {
-      onCancel();
-    }
+    const trimmedValue = value.trim() || defaultValue;
+    onSubmit(trimmedValue);
   };
   return (
     <div

@@ -82,6 +82,8 @@ export function Tree({
     renameFile.mutate({
       fileId: item._id,
       newFileName: name,
+      projectId,
+      parentFolderId: item.parentId,
     });
   };
 
