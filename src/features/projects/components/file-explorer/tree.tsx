@@ -142,14 +142,29 @@ export function Tree({
   if (item.fileType === "folder") {
     if (isRenaming) {
       return (
-        <RenameInput
-          onSubmit={handleRename}
-          onCancel={() => setIsRenaming(false)}
-          type="folder"
-          level={level}
-          defaultValue={item.fileName}
-          isOpen={isOpen}
-        />
+        <>
+          <RenameInput
+            onSubmit={handleRename}
+            onCancel={() => setIsRenaming(false)}
+            type="folder"
+            level={level}
+            defaultValue={item.fileName}
+            isOpen={isOpen}
+          />
+          {isOpen && folderContents.isLoading && (
+            <LoadingRow level={level + 1} />
+          )}
+          {isOpen &&
+            !folderContents.isLoading &&
+            folderContents.data?.map((child) => (
+              <Tree
+                key={child._id}
+                item={child}
+                level={level + 1}
+                projectId={projectId}
+              />
+            ))}
+        </>
       );
     }
     return (

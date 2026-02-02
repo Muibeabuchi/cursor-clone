@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { cn } from "~/lib/utils";
 import ProjectList from "./project-list";
 import { FaGithub } from "react-icons/fa";
@@ -9,6 +9,8 @@ import ProjectsCommndDiaogue from "./projects-command-diaogue";
 
 import { useHotkeys } from "react-hotkeys-hook";
 import { Logo } from "~/components/logo";
+import { LoadingIndicator } from "~/components/Loader";
+import { ProjectListSkeleton } from "~/components/project-list-skeleton";
 
 export const ProjectsView = () => {
   const [commandDialogOpen, setCommandDialogOpen] = useState(false);
@@ -78,7 +80,9 @@ export const ProjectsView = () => {
               </Button>
             </div>
 
-            <ProjectList onViewAll={() => setCommandDialogOpen(true)} />
+            <Suspense fallback={<ProjectListSkeleton />}>
+              <ProjectList onViewAll={() => setCommandDialogOpen(true)} />
+            </Suspense>
           </div>
         </div>
       </div>
