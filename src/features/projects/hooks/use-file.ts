@@ -1,5 +1,5 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
-import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 
@@ -22,6 +22,46 @@ export const fileQueryOptions = {
           }
         : "skip",
     ),
+  getFile: ({
+    fileId,
+    // enabled,
+  }: {
+    fileId: Id<"files"> | null;
+    // enabled: boolean;
+  }) => {
+    // if(!enabled) return;
+    const enabled = !!fileId;
+    return convexQuery(
+      api.controller.files.getFile,
+      enabled
+        ? {
+            fileId,
+          }
+        : "skip",
+    );
+  },
+  getFilePath: ({
+    fileId,
+    // enabled,
+  }: {
+    fileId: Id<"files"> | null;
+    // enabled: boolean;
+  }) => {
+    // if(!enabled) return;
+    const enabled = !!fileId;
+    return convexQuery(
+      api.controller.files.getFilePath,
+      enabled
+        ? {
+            fileId,
+          }
+        : "skip",
+    );
+  },
+};
+
+export const useFile = ({ fileId }: { fileId: Id<"files"> | null }) => {
+  return useQuery(fileQueryOptions.getFile({ fileId }));
 };
 
 export const useFolderContents = ({
@@ -38,6 +78,14 @@ export const useFolderContents = ({
       parentFolderId,
       projectId,
       enabled,
+    }),
+  );
+};
+
+export const useFilePath = ({ fileId }: { fileId: Id<"files"> | null }) => {
+  return useQuery(
+    fileQueryOptions.getFilePath({
+      fileId,
     }),
   );
 };

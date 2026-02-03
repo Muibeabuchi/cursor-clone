@@ -6,6 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { FaGithub } from "react-icons/fa";
 import { Allotment } from "allotment";
 import { FileExplorer } from "./file-explorer";
+import EditorView from "~/features/editor/components/editor-view";
 
 // const
 const MIN_SIDEBAR_WIDTH = 200;
@@ -99,7 +100,7 @@ const ProjectIdView = ({
             // maxSize={MAX_MAIN_SIZE}
             // defaultSize={DEFAULT_MAIN_SIZE}
             >
-              <div>Editor View</div>
+              <EditorView projectId={projectId} />
             </Allotment.Pane>
           </Allotment>
           {/* <div className="">Editor</div> */}

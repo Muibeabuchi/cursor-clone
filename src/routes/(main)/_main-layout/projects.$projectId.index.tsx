@@ -17,12 +17,6 @@ export const Route = createFileRoute(
 )({
   component: RouteComponent,
   validateSearch: zodValidator(activeViewSchema),
-  async loader({ context, params }) {
-    const projectId = params.projectId;
-    await context.queryClient.ensureQueryData(
-      projectQueryOptions.getById(projectId),
-    );
-  },
   pendingComponent: () => <LoadingIndicator />,
 });
 

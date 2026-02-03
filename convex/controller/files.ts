@@ -3,6 +3,7 @@ import {
   authorizedProjectMutation,
   authorizedProjectQuery,
 } from "../middleware/projectMiddleware";
+import { FunctionReturnType } from "convex/server";
 import { query } from "../_generated/server";
 import {
   deleteRecursive,
@@ -12,6 +13,8 @@ import {
   authorizedFileMutation,
   authorizedFileQuery,
 } from "../middleware/fileMiddleware";
+import { Doc } from "../_generated/dataModel";
+import { api } from "../_generated/api";
 
 export const getFiles = authorizedProjectQuery({
   args: {
@@ -31,7 +34,7 @@ export const getFiles = authorizedProjectQuery({
 
 export const getFile = authorizedFileQuery({
   args: { fileId: v.id("files") },
-  async handler(ctx, _args) {
+  async handler(ctx) {
     return ctx.file;
   },
 });
@@ -63,6 +66,39 @@ export const getFolderContents = authorizedProjectQuery({
     return sortedFiles;
   },
 });
+
+export const getFilePath = authorizedFileQuery({
+  args: {
+    fileId: v.id("files"),
+  },
+  async handler({ file, db, project }) {
+    const files = await db
+      .query("files")
+      .withIndex("by_project_parent", (q) =>
+        q.eq("projectId", project._id).eq("parentId", file.parentId),
+      )
+      .collect();
+
+    // traverse through the parents until we get to the root and return the files
+    const path = [];
+    let currentFile: Doc<"files"> = file;
+    while (currentFile && currentFile.parentId) {
+      path.unshift(currentFile);
+      const file = await db.get("files", currentFile.parentId);
+      if (!file) break;
+      currentFile = file;
+    }
+    return path.map((file) => ({
+      _id: file._id,
+      name: file.fileName,
+      type: file.fileType,
+    }));
+  },
+});
+
+export type getFilePathType = FunctionReturnType<
+  typeof api.controller.files.getFilePath
+>;
 
 // -----------------------------MUTATIONS---------------------------//
 
