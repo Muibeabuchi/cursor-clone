@@ -7,6 +7,8 @@ import { basicSetup } from "codemirror";
 import { customTheme } from "../extensions/theme";
 import { getLanguageExtension } from "../extensions/language-extension";
 import { minimap } from "../extensions/minimap";
+import { indentationMarkers } from "@replit/codemirror-indentation-markers";
+import { customSetup } from "../extensions/custom-setup";
 
 interface fileName {
   fileName: string;
@@ -30,10 +32,11 @@ export function CodeEditor({ fileName }: fileName) {
         keymap.of(defaultKeymap),
         keymap.of([indentWithTab]),
         minimap(),
-        basicSetup,
+        customSetup,
         languageExtension,
         customTheme,
         oneDark,
+        indentationMarkers(),
       ],
     });
 

@@ -20,7 +20,7 @@ export const Route = createFileRoute(
     const projectId = params.projectId;
 
     const [_, project] = await Promise.all([
-      context.queryClient.prefetchQuery(
+      context.queryClient.ensureQueryData(
         fileQueryOptions.getInitialProjectFolderContents({ projectId }),
       ),
       context.queryClient.ensureQueryData(
