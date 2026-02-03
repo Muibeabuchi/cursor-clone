@@ -12,9 +12,11 @@ import { customSetup } from "../extensions/custom-setup";
 
 interface fileName {
   fileName: string;
+  initialValue: string;
+  onChange: (value: string) => void;
 }
 
-export function CodeEditor({ fileName }: fileName) {
+export function CodeEditor({ fileName, initialValue, onChange }: fileName) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
 
@@ -27,7 +29,7 @@ export function CodeEditor({ fileName }: fileName) {
     if (!editorRef.current) return;
 
     const state = EditorState.create({
-      doc: "// Start typing...",
+      doc: initialValue,
       extensions: [
         keymap.of(defaultKeymap),
         keymap.of([indentWithTab]),
@@ -37,6 +39,11 @@ export function CodeEditor({ fileName }: fileName) {
         customTheme,
         oneDark,
         indentationMarkers(),
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) {
+            onChange?.(update.state.doc.toString());
+          }
+        }),
       ],
     });
 
@@ -50,7 +57,7 @@ export function CodeEditor({ fileName }: fileName) {
     return () => {
       view.destroy();
     };
-  }, []);
+  }, [languageExtension]);
 
   return (
     <div

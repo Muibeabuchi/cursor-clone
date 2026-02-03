@@ -2,16 +2,21 @@ import { Id } from "convex/_generated/dataModel";
 import TopNavigation from "./top-navigation";
 import { useEditor } from "../hooks/use-editor";
 import FileBreadCrumbs from "./file-bread-crumbs";
-import { useFile } from "~/features/projects/hooks/use-file";
+import { useFile, useUpdateFile } from "~/features/projects/hooks/use-file";
 import { CodeEditor } from "./code-editor";
+import { useRef } from "react";
+
+const DEBOUNCE_TIME = 2000;
 
 export default function EditorView({
   projectId,
 }: {
   projectId: Id<"projects">;
 }) {
+  const updateFileTimeout = useRef<NodeJS.Timeout | null>(null);
   const { activeTabId } = useEditor(projectId);
   const { data: activeFileData } = useFile({ fileId: activeTabId });
+  const { mutate: updateFile } = useUpdateFile();
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center">
@@ -30,7 +35,21 @@ export default function EditorView({
             />
           </div>
         )}
-        {activeFileData && <CodeEditor fileName={activeFileData.fileName} />}
+        {activeFileData && (
+          <CodeEditor
+            key={activeFileData._id}
+            fileName={activeFileData.fileName}
+            initialValue={activeFileData.content ?? ""}
+            onChange={(value) => {
+              if (updateFileTimeout.current) {
+                clearTimeout(updateFileTimeout.current);
+              }
+              updateFileTimeout.current = setTimeout(() => {
+                updateFile({ content: value, fileId: activeFileData._id });
+              }, DEBOUNCE_TIME);
+            }}
+          />
+        )}
       </div>
     </div>
   );
