@@ -17,7 +17,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { Link } from "@tanstack/react-router";
 import { FaGithub } from "react-icons/fa";
-import { useGithubAuth, useSignIn } from "~/hooks/useAuthMethods";
+import {
+  useGithubAuth,
+  useSignIn,
+} from "~/features/auth/hooks/use-auth-methods";
 import { useForm } from "@tanstack/react-form";
 import React from "react";
 

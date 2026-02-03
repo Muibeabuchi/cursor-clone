@@ -14,7 +14,11 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 import { emailSignUpSchema } from "~/schema/authSchema";
 import { useForm } from "@tanstack/react-form";
 import { useEffect } from "react";
-import { useGithubAuth, useSignIn, useSignUp } from "~/hooks/useAuthMethods";
+import {
+  useGithubAuth,
+  useSignIn,
+  useSignUp,
+} from "~/features/auth/hooks/use-auth-methods";
 
 export function SignupForm({
   className,

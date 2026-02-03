@@ -17,7 +17,9 @@ import { FileType } from "convex/schema";
 import { TreeItemWrapper } from "./tree-item-wrapper";
 import { FileIcon, FolderIcon } from "@react-symbols/icons/utils";
 import CreateInput from "./create-input";
+
 import RenameInput from "./rename-input";
+import { useEditor } from "~/features/editor/hooks/use-editor";
 
 export function Tree({
   item,
@@ -37,6 +39,9 @@ export function Tree({
   const updateFile = useUpdateFile();
   const deleteFile = useDeleteFile();
   const renameFile = useRenameFile();
+
+  const { openFile, closeTab, closeAllTabs, activeTabId } =
+    useEditor(projectId);
 
   const folderContents = useFolderContents({
     parentFolderId: item._id,
@@ -217,21 +222,22 @@ export function Tree({
       );
     }
     const fileName = item.fileName;
+    const isActive = activeTabId === item._id;
     return (
       <TreeItemWrapper
         item={item}
         level={level}
-        onClick={() => {}}
-        onDelete={() =>
-          // close tab
+        onClick={() => openFile(item._id, { pinned: false })}
+        onDoubleClick={() => openFile(item._id, { pinned: true })}
+        onDelete={() => {
+          closeTab(item._id);
           deleteFile.mutate({
             fileId: item._id,
-          })
-        }
-        onDoubleClick={() => {}}
+          });
+        }}
         onRename={() => setIsRenaming(true)}
         projectId={projectId}
-        isActive={false}
+        isActive={isActive}
         // onCreateFile={() => setCreating("file")}
         // onCreateFolder={() => setCreating("folder")}
       >
