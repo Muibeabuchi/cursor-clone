@@ -3,6 +3,7 @@ import { Id } from "convex/_generated/dataModel";
 import { projectQueryOptions } from "~/features/projects/hooks/use-projects";
 import { LoadingIndicator } from "~/components/Loader";
 import ProjectIdLayout from "~/features/projects/components/project-id-layout";
+import { fileQueryOptions } from "~/features/projects/hooks/use-file";
 
 export const Route = createFileRoute(
   "/(main)/_main-layout/projects/$projectId",
@@ -17,9 +18,15 @@ export const Route = createFileRoute(
   component: RouteComponent,
   async loader({ context, params }) {
     const projectId = params.projectId;
-    const project = await context.queryClient.ensureQueryData(
-      projectQueryOptions.getById(projectId),
-    );
+
+    const [_, project] = await Promise.all([
+      context.queryClient.prefetchQuery(
+        fileQueryOptions.getInitialProjectFolderContents({ projectId }),
+      ),
+      context.queryClient.ensureQueryData(
+        projectQueryOptions.getById(projectId),
+      ),
+    ]);
     if (!project) {
       throw notFound();
     }

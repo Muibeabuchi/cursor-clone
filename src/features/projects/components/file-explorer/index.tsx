@@ -13,6 +13,7 @@ import {
   useCreateFile,
   useCreateFolder,
   useFolderContents,
+  useInitialProjectFolderContents,
 } from "../../hooks/use-file";
 import CreateInput from "./create-input";
 import { LoadingRow } from "./loading-row";
@@ -25,10 +26,9 @@ export function FileExplorer({ project }: { project: Doc<"projects"> }) {
 
   console.log({ projectId: project._id });
 
-  const { data: folderContents, isLoading } = useFolderContents({
-    // parentFolderId,
+  const { data: folderContents, isLoading } = useInitialProjectFolderContents({
     projectId: project._id,
-    enabled: isExpanded,
+    // enabled: isExpanded,
   });
 
   const createFile = useCreateFile();
@@ -121,14 +121,16 @@ export function FileExplorer({ project }: { project: Doc<"projects"> }) {
             )}
           </>
         )}
-        {folderContents?.map((item) => (
-          <Tree
-            key={`${item._id}-${collapseKey}`}
-            item={item}
-            level={0}
-            projectId={project._id}
-          />
-        ))}
+
+        {isExpanded &&
+          folderContents?.map((item) => (
+            <Tree
+              key={`${item._id}-${collapseKey}`}
+              item={item}
+              level={0}
+              projectId={project._id}
+            />
+          ))}
       </ScrollArea>
     </div>
   );

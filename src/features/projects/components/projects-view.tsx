@@ -9,7 +9,6 @@ import ProjectsCommndDiaogue from "./projects-command-diaogue";
 
 import { useHotkeys } from "react-hotkeys-hook";
 import { Logo } from "~/components/logo";
-import { LoadingIndicator } from "~/components/Loader";
 import { ProjectListSkeleton } from "~/components/project-list-skeleton";
 
 export const ProjectsView = () => {

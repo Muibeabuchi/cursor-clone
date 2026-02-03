@@ -1,9 +1,17 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 
 export const fileQueryOptions = {
+  getInitialProjectFolderContents: ({
+    projectId,
+  }: {
+    projectId: Id<"projects">;
+  }) =>
+    convexQuery(api.controller.files.getFolderContents, {
+      projectId,
+    }),
   getFolderContents: ({
     projectId,
     parentFolderId,
@@ -79,6 +87,16 @@ export const useFolderContents = ({
       projectId,
       enabled,
     }),
+  );
+};
+
+export const useInitialProjectFolderContents = ({
+  projectId,
+}: {
+  projectId: Id<"projects">;
+}) => {
+  return useSuspenseQuery(
+    fileQueryOptions.getInitialProjectFolderContents({ projectId }),
   );
 };
 

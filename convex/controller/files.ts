@@ -13,7 +13,7 @@ import {
   authorizedFileMutation,
   authorizedFileQuery,
 } from "../middleware/fileMiddleware";
-import { Doc } from "../_generated/dataModel";
+import { Doc, Id } from "../_generated/dataModel";
 import { api } from "../_generated/api";
 
 export const getFiles = authorizedProjectQuery({
@@ -72,26 +72,22 @@ export const getFilePath = authorizedFileQuery({
     fileId: v.id("files"),
   },
   async handler({ file, db, project }) {
-    const files = await db
-      .query("files")
-      .withIndex("by_project_parent", (q) =>
-        q.eq("projectId", project._id).eq("parentId", file.parentId),
-      )
-      .collect();
-
     // traverse through the parents until we get to the root and return the files
-    const path = [];
-    let currentFile: Doc<"files"> = file;
-    while (currentFile && currentFile.parentId) {
-      path.unshift(currentFile);
-      const file = await db.get("files", currentFile.parentId);
-      if (!file) break;
-      currentFile = file;
+
+    const path: Doc<"files">[] = [];
+    let currentFileId: Id<"files"> | undefined = file._id;
+    while (currentFileId) {
+      const fileData = (await db.get("files", currentFileId)) as
+        | Doc<"files">
+        | undefined;
+      if (!fileData) break;
+      path.unshift(fileData);
+      currentFileId = fileData.parentId;
     }
-    return path.map((file) => ({
-      _id: file._id,
-      name: file.fileName,
-      type: file.fileType,
+    return path.map((item) => ({
+      _id: item._id,
+      name: item.fileName,
+      type: item.fileType,
     }));
   },
 });
