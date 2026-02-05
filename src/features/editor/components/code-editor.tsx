@@ -9,14 +9,19 @@ import { getLanguageExtension } from "../extensions/language-extension";
 import { minimap } from "../extensions/minimap";
 import { indentationMarkers } from "@replit/codemirror-indentation-markers";
 import { customSetup } from "../extensions/custom-setup";
+import { suggestion } from "../extensions/suggestion";
 
 interface fileName {
   fileName: string;
-  initialValue: string;
+  initialValue?: string;
   onChange: (value: string) => void;
 }
 
-export function CodeEditor({ fileName, initialValue, onChange }: fileName) {
+export function CodeEditor({
+  fileName,
+  initialValue = "",
+  onChange,
+}: fileName) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
 
@@ -38,6 +43,7 @@ export function CodeEditor({ fileName, initialValue, onChange }: fileName) {
         languageExtension,
         customTheme,
         oneDark,
+        suggestion(fileName),
         indentationMarkers(),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {

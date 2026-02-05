@@ -13,7 +13,7 @@ export const customTheme = EditorView.theme({
   "&": {
     backgroundColor: "var(--background)",
     color: "var(--foreground)",
-    outline: "none !important",
+    // outline: "none !important",
   },
   "cm-scroller": {
     scrollbarWidth: "thin",
