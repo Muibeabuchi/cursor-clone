@@ -4,10 +4,6 @@ import { type Infer, v } from "convex/values";
 const importStatus = v.optional(
   v.union(v.literal("importing"), v.literal("completed"), v.literal("failed")),
 );
-
-const fileType = v.union(v.literal("file"), v.literal("folder"));
-export type FileType = Infer<typeof fileType>;
-
 const exportStatus = v.optional(
   v.union(
     v.literal("exporting"),
@@ -16,6 +12,12 @@ const exportStatus = v.optional(
     v.literal("cancelled"),
   ),
 );
+
+const fileType = v.union(v.literal("file"), v.literal("folder"));
+export type FileType = Infer<typeof fileType>;
+
+const role = v.union(v.literal("user"), v.literal("assistant"));
+export type Role = Infer<typeof role>;
 
 const filesTable = defineTable({
   projectId: v.id("projects"),
@@ -42,9 +44,34 @@ const projectsTable = defineTable({
   exportRepoUrl: v.optional(v.string()),
 }).index("by_owner_id", ["ownerId"]);
 
+const conversationTable = defineTable({
+  projectId: v.id("projects"),
+  title: v.string(),
+  updatedAt: v.number(),
+}).index("by_project", ["projectId"]);
+
+const messageTable = defineTable({
+  conversationId: v.id("conversations"),
+  projectId: v.id("projects"),
+  role,
+  status: v.optional(
+    v.union(
+      v.literal("processing"),
+      v.literal("completed"),
+      v.literal("cancelled"),
+    ),
+  ),
+  content: v.string(),
+  updatedAt: v.number(),
+})
+  .index("by_conversation", ["conversationId"])
+  .index("by_project_status", ["projectId", "status"]);
+
 const schema = defineSchema({
   projects: projectsTable,
   files: filesTable,
+  conversations: conversationTable,
+  messages: messageTable,
 });
 export default schema;
 
