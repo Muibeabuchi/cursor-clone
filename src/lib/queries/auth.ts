@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getAuth } from "~/utils/auth-ssr";
 
-const $getUser = async () => (await getAuth()) ?? null;
+export const $getUser = async () => (await getAuth()) ?? null;
 
 export const authQueryOptions = () =>
   queryOptions({

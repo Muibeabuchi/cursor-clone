@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ApiSuggestionRouteImport } from './routes/api/suggestion'
+import { Route as ApiQuickEditRouteImport } from './routes/api/quick-edit'
 import { Route as ApiInngestRouteRouteImport } from './routes/api/inngest/route'
 import { Route as mainMainLayoutRouteRouteImport } from './routes/(main)/_main-layout/route'
 import { Route as authAuthLayoutRouteRouteImport } from './routes/(auth)/_auth-layout/route'
@@ -20,6 +22,16 @@ import { Route as ApiAiChatRouteRouteImport } from './routes/api/ai/chat/route'
 import { Route as mainMainLayoutProjectsProjectIdRouteRouteImport } from './routes/(main)/_main-layout/projects.$projectId.route'
 import { Route as mainMainLayoutProjectsProjectIdIndexRouteImport } from './routes/(main)/_main-layout/projects.$projectId.index'
 
+const ApiSuggestionRoute = ApiSuggestionRouteImport.update({
+  id: '/api/suggestion',
+  path: '/api/suggestion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiQuickEditRoute = ApiQuickEditRouteImport.update({
+  id: '/api/quick-edit',
+  path: '/api/quick-edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiInngestRouteRoute = ApiInngestRouteRouteImport.update({
   id: '/api/inngest',
   path: '/api/inngest',
@@ -73,6 +85,8 @@ const mainMainLayoutProjectsProjectIdIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/api/inngest': typeof ApiInngestRouteRoute
+  '/api/quick-edit': typeof ApiQuickEditRoute
+  '/api/suggestion': typeof ApiSuggestionRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/sign-in': typeof authAuthLayoutSignInRoute
   '/sign-up': typeof authAuthLayoutSignUpRoute
@@ -83,6 +97,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/api/inngest': typeof ApiInngestRouteRoute
+  '/api/quick-edit': typeof ApiQuickEditRoute
+  '/api/suggestion': typeof ApiSuggestionRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/sign-in': typeof authAuthLayoutSignInRoute
   '/sign-up': typeof authAuthLayoutSignUpRoute
@@ -95,6 +111,8 @@ export interface FileRoutesById {
   '/(auth)/_auth-layout': typeof authAuthLayoutRouteRouteWithChildren
   '/(main)/_main-layout': typeof mainMainLayoutRouteRouteWithChildren
   '/api/inngest': typeof ApiInngestRouteRoute
+  '/api/quick-edit': typeof ApiQuickEditRoute
+  '/api/suggestion': typeof ApiSuggestionRoute
   '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/(auth)/_auth-layout/sign-in': typeof authAuthLayoutSignInRoute
   '/(auth)/_auth-layout/sign-up': typeof authAuthLayoutSignUpRoute
@@ -107,6 +125,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/api/inngest'
+    | '/api/quick-edit'
+    | '/api/suggestion'
     | '/api/ai/chat'
     | '/sign-in'
     | '/sign-up'
@@ -117,6 +137,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/api/inngest'
+    | '/api/quick-edit'
+    | '/api/suggestion'
     | '/api/ai/chat'
     | '/sign-in'
     | '/sign-up'
@@ -128,6 +150,8 @@ export interface FileRouteTypes {
     | '/(auth)/_auth-layout'
     | '/(main)/_main-layout'
     | '/api/inngest'
+    | '/api/quick-edit'
+    | '/api/suggestion'
     | '/api/ai/chat'
     | '/(auth)/_auth-layout/sign-in'
     | '/(auth)/_auth-layout/sign-up'
@@ -141,12 +165,28 @@ export interface RootRouteChildren {
   authAuthLayoutRouteRoute: typeof authAuthLayoutRouteRouteWithChildren
   mainMainLayoutRouteRoute: typeof mainMainLayoutRouteRouteWithChildren
   ApiInngestRouteRoute: typeof ApiInngestRouteRoute
+  ApiQuickEditRoute: typeof ApiQuickEditRoute
+  ApiSuggestionRoute: typeof ApiSuggestionRoute
   ApiAiChatRouteRoute: typeof ApiAiChatRouteRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/api/suggestion': {
+      id: '/api/suggestion'
+      path: '/api/suggestion'
+      fullPath: '/api/suggestion'
+      preLoaderRoute: typeof ApiSuggestionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/quick-edit': {
+      id: '/api/quick-edit'
+      path: '/api/quick-edit'
+      fullPath: '/api/quick-edit'
+      preLoaderRoute: typeof ApiQuickEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/inngest': {
       id: '/api/inngest'
       path: '/api/inngest'
@@ -266,6 +306,8 @@ const rootRouteChildren: RootRouteChildren = {
   authAuthLayoutRouteRoute: authAuthLayoutRouteRouteWithChildren,
   mainMainLayoutRouteRoute: mainMainLayoutRouteRouteWithChildren,
   ApiInngestRouteRoute: ApiInngestRouteRoute,
+  ApiQuickEditRoute: ApiQuickEditRoute,
+  ApiSuggestionRoute: ApiSuggestionRoute,
   ApiAiChatRouteRoute: ApiAiChatRouteRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

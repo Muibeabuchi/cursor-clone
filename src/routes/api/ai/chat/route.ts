@@ -1,7 +1,7 @@
 import { streamText, convertToModelMessages, UIMessage } from "ai";
 import { createFileRoute } from "@tanstack/react-router";
-import { grokOpenRouterProvider } from "~/lib/open-router";
-// import google from "~/lib/google-gemini";
+// import openrouter from "~/lib/open-router";
+import google from "~/lib/google-gemini";
 // import { UIMessage } from "@ai-sdk/react";
 
 // export const grokOpenRouterProvider = openrouter.chat("x-ai/grok-code-fast-1");
@@ -13,8 +13,8 @@ export const Route = createFileRoute("/api/ai/chat")({
         const { messages }: { messages: UIMessage[] } = await request.json();
 
         const result = streamText({
-          model: grokOpenRouterProvider,
-          //    google.chat("gemini-2.5-pro"),
+          // model: grokOpenRouterProvider,
+          model: google.chat("gemini-2.5-pro"),
           //   openrouter.chat("anthropic/claude-sonnet-4.5"),
           //   openrouter.chat("x-ai/grok-code-fast-1"),
           messages: await convertToModelMessages(messages),

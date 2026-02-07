@@ -115,6 +115,7 @@ const createDebouncePlugin = (fileName: string) => {
 
         debounceTimer = window.setTimeout(async () => {
           const payload = generatePayload(view, fileName);
+          console.log({ payload });
           if (!payload) {
             isWaitingForSuggestion = false;
             view.dispatch({ effects: setSuggestionEffect.of(null) });

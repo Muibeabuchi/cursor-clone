@@ -12,6 +12,7 @@
     "start": "pnpx srvx --prod -s ../client dist/server/server.js"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.38",
     "@ai-sdk/google": "^3.0.13",
     "@ai-sdk/react": "^3.0.51",
     "@codemirror/autocomplete": "^6.20.0",

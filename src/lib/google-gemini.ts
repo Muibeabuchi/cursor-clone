@@ -5,4 +5,4 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GEMINI_API_KEY!,
 });
 
-export default google;
+export const GEMINI_MODEL = google.chat("gemini-2.5-pro");

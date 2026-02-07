@@ -10,6 +10,8 @@ import { minimap } from "../extensions/minimap";
 import { indentationMarkers } from "@replit/codemirror-indentation-markers";
 import { customSetup } from "../extensions/custom-setup";
 import { suggestion } from "../extensions/suggestion";
+import { quickEdit } from "../extensions/quick-edit";
+import { selectionTooltip } from "../extensions/selection-tooltip";
 
 interface fileName {
   fileName: string;
@@ -42,8 +44,10 @@ export function CodeEditor({
         customSetup,
         languageExtension,
         customTheme,
+        selectionTooltip(),
         oneDark,
-        suggestion(fileName),
+        // suggestion(fileName),
+        quickEdit(fileName),
         indentationMarkers(),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
