@@ -4,6 +4,7 @@ import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import { ClientOnly } from "@tanstack/react-router";
 import { ProjectIdPageSkeleton } from "~/components/ProjectIdPageSkeleton";
+import { ConversationSidebar } from "~/features/conversations/components/conversationSidebar";
 
 const paneConstants = {
   Min_SIDEBAR_WIDTH: 200,
@@ -37,8 +38,7 @@ const ProjectIdLayout = ({
               maxSize={paneConstants.Max_SIDEBAR_WIDTH}
               preferredSize={paneConstants.DEFAULT_CONVERSATION_SIDEBAR_WIDTH}
             >
-              <div className="">SideBar</div>
-              {/* <Sidebar /> */}
+              <ConversationSidebar projectId={projectId} />
             </Allotment.Pane>
             <Allotment.Pane>{children}</Allotment.Pane>
           </Allotment>
