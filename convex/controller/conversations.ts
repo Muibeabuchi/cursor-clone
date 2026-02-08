@@ -3,19 +3,14 @@ import {
   authorizedProjectMutation,
   authorizedProjectQuery,
 } from "../middleware/projectMiddleware";
-import { getConversationOrThrow } from "../models/conversationModel";
 import { authorizedConversationQuery } from "../middleware/conversationMiddleware";
 
-export const getById = authorizedProjectQuery({
+export const getById = authorizedConversationQuery({
   args: {
-    id: v.id("conversations"),
+    conversationId: v.id("conversations"),
   },
   handler: async (ctx, args) => {
-    const conversation = await getConversationOrThrow({
-      ctx,
-      conversationId: args.id,
-    });
-    return conversation;
+    return ctx.conversation;
   },
 });
 
