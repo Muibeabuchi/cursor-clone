@@ -18,7 +18,6 @@ import { Route as mainMainLayoutIndexRouteImport } from './routes/(main)/_main-l
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as authAuthLayoutSignUpRouteImport } from './routes/(auth)/_auth-layout/sign-up'
 import { Route as authAuthLayoutSignInRouteImport } from './routes/(auth)/_auth-layout/sign-in'
-import { Route as ApiAiChatRouteRouteImport } from './routes/api/ai/chat/route'
 import { Route as mainMainLayoutProjectsProjectIdRouteRouteImport } from './routes/(main)/_main-layout/projects.$projectId.route'
 import { Route as mainMainLayoutProjectsProjectIdIndexRouteImport } from './routes/(main)/_main-layout/projects.$projectId.index'
 
@@ -65,11 +64,6 @@ const authAuthLayoutSignInRoute = authAuthLayoutSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => authAuthLayoutRouteRoute,
 } as any)
-const ApiAiChatRouteRoute = ApiAiChatRouteRouteImport.update({
-  id: '/api/ai/chat',
-  path: '/api/ai/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const mainMainLayoutProjectsProjectIdRouteRoute =
   mainMainLayoutProjectsProjectIdRouteRouteImport.update({
     id: '/projects/$projectId',
@@ -87,7 +81,6 @@ export interface FileRoutesByFullPath {
   '/api/inngest': typeof ApiInngestRouteRoute
   '/api/quick-edit': typeof ApiQuickEditRoute
   '/api/suggestion': typeof ApiSuggestionRoute
-  '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/sign-in': typeof authAuthLayoutSignInRoute
   '/sign-up': typeof authAuthLayoutSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -99,7 +92,6 @@ export interface FileRoutesByTo {
   '/api/inngest': typeof ApiInngestRouteRoute
   '/api/quick-edit': typeof ApiQuickEditRoute
   '/api/suggestion': typeof ApiSuggestionRoute
-  '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/sign-in': typeof authAuthLayoutSignInRoute
   '/sign-up': typeof authAuthLayoutSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -113,7 +105,6 @@ export interface FileRoutesById {
   '/api/inngest': typeof ApiInngestRouteRoute
   '/api/quick-edit': typeof ApiQuickEditRoute
   '/api/suggestion': typeof ApiSuggestionRoute
-  '/api/ai/chat': typeof ApiAiChatRouteRoute
   '/(auth)/_auth-layout/sign-in': typeof authAuthLayoutSignInRoute
   '/(auth)/_auth-layout/sign-up': typeof authAuthLayoutSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -127,7 +118,6 @@ export interface FileRouteTypes {
     | '/api/inngest'
     | '/api/quick-edit'
     | '/api/suggestion'
-    | '/api/ai/chat'
     | '/sign-in'
     | '/sign-up'
     | '/api/auth/$'
@@ -139,7 +129,6 @@ export interface FileRouteTypes {
     | '/api/inngest'
     | '/api/quick-edit'
     | '/api/suggestion'
-    | '/api/ai/chat'
     | '/sign-in'
     | '/sign-up'
     | '/api/auth/$'
@@ -152,7 +141,6 @@ export interface FileRouteTypes {
     | '/api/inngest'
     | '/api/quick-edit'
     | '/api/suggestion'
-    | '/api/ai/chat'
     | '/(auth)/_auth-layout/sign-in'
     | '/(auth)/_auth-layout/sign-up'
     | '/api/auth/$'
@@ -167,7 +155,6 @@ export interface RootRouteChildren {
   ApiInngestRouteRoute: typeof ApiInngestRouteRoute
   ApiQuickEditRoute: typeof ApiQuickEditRoute
   ApiSuggestionRoute: typeof ApiSuggestionRoute
-  ApiAiChatRouteRoute: typeof ApiAiChatRouteRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -236,13 +223,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authAuthLayoutSignInRouteImport
       parentRoute: typeof authAuthLayoutRouteRoute
     }
-    '/api/ai/chat': {
-      id: '/api/ai/chat'
-      path: '/api/ai/chat'
-      fullPath: '/api/ai/chat'
-      preLoaderRoute: typeof ApiAiChatRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(main)/_main-layout/projects/$projectId': {
       id: '/(main)/_main-layout/projects/$projectId'
       path: '/projects/$projectId'
@@ -308,7 +288,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiInngestRouteRoute: ApiInngestRouteRoute,
   ApiQuickEditRoute: ApiQuickEditRoute,
   ApiSuggestionRoute: ApiSuggestionRoute,
-  ApiAiChatRouteRoute: ApiAiChatRouteRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
