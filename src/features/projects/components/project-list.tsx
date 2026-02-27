@@ -1,11 +1,6 @@
 import { Spinner } from "~/components/ui/spinner";
-import { useCreateProjects, useProjectsPartial } from "../hooks/use-projects";
-import {
-  uniqueNamesGenerator,
-  adjectives,
-  colors,
-  animals,
-} from "unique-names-generator";
+import { useProjectsPartial } from "../hooks/use-projects";
+
 import { Kbd } from "~/components/ui/kbd";
 import { Doc } from "convex/_generated/dataModel";
 import { Link } from "@tanstack/react-router";
@@ -80,10 +75,24 @@ const ProjectItem = ({ data }: { data: Doc<"projects"> }) => {
 
 const ProjectList = ({ onViewAll }: ProjectListProps) => {
   const { data: projects, isPending } = useProjectsPartial(6);
-  const { mutate: createProject } = useCreateProjects();
+  // const { mutate: createProject } = useCreateProjects();
 
   if (isPending) {
     return <Spinner className="size-4 text-ring" />;
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 px-4 border border-dashed rounded-none bg-background text-center">
+        <div className="flex bg-muted/50 p-3 rounded-full mb-4">
+          <AlertCircleIcon className="size-6 text-muted-foreground" />
+        </div>
+        <h3 className="text-sm font-medium text-foreground">No projects yet</h3>
+        <p className="text-xs text-muted-foreground mt-1 max-w-xs mx-auto">
+          Create a new project or import an existing repository to get started.
+        </p>
+      </div>
+    );
   }
 
   const [mostRecent, ...rest] = projects;

@@ -43,45 +43,7 @@ export const Route = createFileRoute("/(main)/_main-layout/")({
 });
 
 function Home() {
-  // const { logOut } = useSignOut();
-  // import { api } from "convex/_generated/api";
-  // const { data: files } = useQuery(
-  //   convexQuery(api.controller.files.getFolderContents, {}),
-  //   // {
-  //   //   projectId: "",
-
-  //   // },
-  // );
-
-  return (
-    // <div className="p-8 space-y-2">
-    //   {userToken ? (
-    //     <Fragment>
-    //       <div className="">
-    //         <Button className="font-mono ml-5" onClick={logOut}>
-    //           Log Out
-    //         </Button>
-    //       </div>
-    //       {/* <Chat /> */}
-    //     </Fragment>
-    //   ) : (
-    //     <Link to="/sign-in">
-    //       <Button className="font-mono">Sign In</Button>
-    //     </Link>
-    //   )}
-    //   {/* <Authenticated>
-    //     <p className="text-yellow-600">
-    //       This text only shows up when the user is Authenticated
-    //     </p>
-    //   </Authenticated>
-    //   <Unauthenticated>
-    //     <p className="text-indigo-600">
-    //       This text only shows up when the user is UnAuthenticated
-    //     </p>
-    //   </Unauthenticated> */}
-    // </div>
-    <ProjectsView />
-  );
+  return <ProjectsView />;
 }
 
 // import { createFileRoute } from '@tanstack/react-router';

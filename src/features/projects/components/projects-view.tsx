@@ -7,13 +7,32 @@ import { SparkleIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import ProjectsCommndDiaogue from "./projects-command-diaogue";
 
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
+import { useCreateProjects } from "../hooks/use-projects";
+
 import { useHotkeys } from "react-hotkeys-hook";
 import { Logo } from "~/components/logo";
 import { ProjectListSkeleton } from "~/components/project-list-skeleton";
+import toast from "react-hot-toast";
 
 export const ProjectsView = () => {
   const [commandDialogOpen, setCommandDialogOpen] = useState(false);
+  const { mutateAsync: createProject, isPending: creatingProject } =
+    useCreateProjects();
 
+  const handleCreateProject = async () => {
+    const randomName = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, animals],
+      separator: "-",
+    });
+    await createProject({ name: randomName });
+    toast.success("Project created successfully");
+  };
   useHotkeys("ctrl+k", (e) => {
     e.preventDefault();
     setCommandDialogOpen(true);
@@ -26,6 +45,7 @@ export const ProjectsView = () => {
 
   useHotkeys("ctrl+j", (e) => {
     e.preventDefault();
+    handleCreateProject();
     // setCommandDialogOpen(true);
   });
 
@@ -56,6 +76,7 @@ export const ProjectsView = () => {
               <Button
                 variant="outline"
                 className="h-full w-full items-start justify-start p-4 bg-background border flex flex-col gap-6 rounded-none"
+                onClick={handleCreateProject}
               >
                 <div className="flex items-center justify-between w-full">
                   <SparkleIcon className="size-4" />
