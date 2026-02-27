@@ -9,7 +9,7 @@ import {
   FieldSeparator,
 } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { emailSignUpSchema } from "~/schema/authSchema";
 import { useForm } from "@tanstack/react-form";
@@ -19,6 +19,7 @@ import {
   useSignIn,
   useSignUp,
 } from "~/features/auth/hooks/use-auth-methods";
+import toast from "react-hot-toast";
 
 export function SignupForm({
   className,
@@ -27,6 +28,8 @@ export function SignupForm({
   const { signIn } = useSignIn();
   const { signUp } = useSignUp();
   const { signInWithGithub } = useGithubAuth();
+
+  const router = useRouter();
   const signUpForm = useForm({
     defaultValues: {
       email: "",
@@ -38,11 +41,19 @@ export function SignupForm({
       onSubmit: emailSignUpSchema,
     },
     onSubmit: async ({ value }) => {
-      signUp({
+      const response = await signUp({
         email: value.email,
         password: value.password,
         name: value.name,
       });
+      if (response.error) {
+        console.log(response.error);
+        toast.error("Failed to create Account");
+      }
+      if (response.data) {
+        toast.success("Account created successfully");
+        router.navigate({ to: "/" });
+      }
     },
   });
 
@@ -74,6 +85,7 @@ export function SignupForm({
                       id="name"
                       type="text"
                       placeholder="John Doe"
+                      disabled={signUpForm.state.isSubmitting}
                       required
                       onChange={(e) => field.handleChange(e.target.value)}
                       value={field.state.value}
@@ -102,6 +114,7 @@ export function SignupForm({
                       type="email"
                       placeholder="m@example.com"
                       required
+                      disabled={signUpForm.state.isSubmitting}
                       onChange={(e) => field.handleChange(e.target.value)}
                       value={field.state.value}
                       onBlur={field.handleBlur}
@@ -137,6 +150,7 @@ export function SignupForm({
                           id="password"
                           type="password"
                           required
+                          disabled={signUpForm.state.isSubmitting}
                           onChange={(e) => field.handleChange(e.target.value)}
                           value={field.state.value}
                           onBlur={field.handleBlur}
@@ -173,6 +187,7 @@ export function SignupForm({
                             id="confirm-password"
                             type="password"
                             required
+                            disabled={signUpForm.state.isSubmitting}
                             onChange={(e) => field.handleChange(e.target.value)}
                             value={field.state.value}
                             onBlur={field.handleBlur}
@@ -198,13 +213,19 @@ export function SignupForm({
                 </Field>
               </Field>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit" disabled={signUpForm.state.isSubmitting}>
+                  Create Account
+                </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator>
               <Field className="grid ">
-                <Button variant="outline" type="button">
+                <Button
+                  variant="outline"
+                  type="button"
+                  disabled={signUpForm.state.isSubmitting}
+                >
                   <FaGithub />
                   <span className="sr-only">Sign up with GitHub</span>
                 </Button>

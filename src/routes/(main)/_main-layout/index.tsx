@@ -2,9 +2,9 @@
 // import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 // import { api } from "convex/_generated/api";
-import { Authenticated, Unauthenticated } from "convex/react";
-import { Button } from "~/components/ui/button";
-import { useSignOut } from "~/hooks/useAuthMethods";
+// import { Authenticated, Unauthenticated } from "convex/react";
+// import { Button } from "~/components/ui/button";
+// import { useSignOut } from "~/hooks/useAuthMethods";
 import { authQueryOptions } from "~/lib/queries/auth";
 
 import { useChat } from "@ai-sdk/react";

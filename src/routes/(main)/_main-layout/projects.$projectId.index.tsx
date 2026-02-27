@@ -1,5 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { projectQueryOptions } from "~/features/projects/hooks/use-projects";
+import { createFileRoute } from "@tanstack/react-router";
 import { LoadingIndicator } from "~/components/Loader";
 import ProjectIdView from "~/features/projects/components/project-id-view";
 

@@ -15,7 +15,7 @@ import {
   FieldSeparator,
 } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { FaGithub } from "react-icons/fa";
 import {
   useGithubAuth,
@@ -23,6 +23,7 @@ import {
 } from "~/features/auth/hooks/use-auth-methods";
 import { useForm } from "@tanstack/react-form";
 import React from "react";
+import toast from "react-hot-toast";
 
 export function LoginForm({
   className,
@@ -30,6 +31,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const { signInWithGithub } = useGithubAuth();
   const { signIn } = useSignIn();
+  const router = useRouter();
 
   const loginForm = useForm({
     defaultValues: {
@@ -42,9 +44,12 @@ export function LoginForm({
 
       if (error) {
         console.log(error);
+        toast.error("Failed to login");
       }
 
       console.log(data);
+      toast.success("Login successful");
+      router.navigate({ to: "/" });
     },
   });
   return (
@@ -58,7 +63,11 @@ export function LoginForm({
           <React.Fragment>
             <FieldGroup>
               <Field>
-                <Button variant="outline" type="button">
+                <Button
+                  variant="outline"
+                  type="button"
+                  // onClick={signInWithGithub}
+                >
                   <FaGithub />
                   Login with GitHub
                 </Button>
@@ -83,6 +92,7 @@ export function LoginForm({
                         type="email"
                         placeholder="joe@example.com"
                         required
+                        disabled={loginForm.state.isSubmitting}
                         onChange={(e) => field.handleChange(e.target.value)}
                         value={field.state.value}
                         onBlur={field.handleBlur}
@@ -101,6 +111,7 @@ export function LoginForm({
                         type="password"
                         placeholder="********"
                         required
+                        disabled={loginForm.state.isSubmitting}
                         onChange={(e) => field.handleChange(e.target.value)}
                         value={field.state.value}
                         onBlur={field.handleBlur}

@@ -8,7 +8,11 @@ export const emailSignInSchema = z.object({
 export const emailSignUpSchema = z
   .object({
     email: z.string().email(),
-    password: z.string().min(8),
+    password: z
+      .string()
+      .min(8)
+      .regex(/[A-Z]/, "Must contain uppercase")
+      .regex(/[0-9]/, "Must contain number"),
     confirmPassword: z
       .string()
       .min(8)

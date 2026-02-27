@@ -1,52 +1,78 @@
-# Trello-like example using Convex DB
+````markdown
+# 📋 KODA
 
-This is a TanStack Start demo using Convex as the database.
-It is similar to the [start-trellaux](https://github.com/TanStack/router/tree/main/examples/react/start-trellaux) example but uses a cloud Convex deployment instead of an in-memory database.
+A high-performance, real-time Trello clone built with **TanStack Start** and **Convex**. This project demonstrates the power of a reactive backend combined with type-safe routing and state management.
 
-- [TanStack Router Docs](https://tanstack.com/router)
-- [Convex Documentation](https://docs.convex.dev)
+## ✨ Features
 
-## Start a new project based on this example
+- **Real-time Sync**: Instant updates across all clients using Convex's reactive engine.
+- **Type-Safe Routing**: Full end-to-end type safety with TanStack Router.
+- **Optimistic UI**: Seamless drag-and-drop and editing experiences with immediate feedback.
+- **Automatic Invalidation**: Smart query invalidation that only updates what's necessary.
+- **Consistent State**: Snapshot-consistent reads to prevent UI flickering or data inconsistencies.
 
-To start a new project based on this example, run:
+## 🛠️ Tech Stack
 
-```sh
-npx gitpick TanStack/router/tree/main/examples/react/start-convex-trellaux start-convex-trellaux
-```
+- **Framework**: [TanStack Start](https://tanstack.com/router/v1/docs/guide/introduction)
+- **Database & Backend**: [Convex](https://convex.dev/)
+- **State Management**: [TanStack Query](https://tanstack.com/query)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 
-## Convex
+## 🚀 Getting Started
 
-Convex is an open-source, reactive backend made by [convex.dev](https://convex.dev/?utm_source=tanstack), a sponsor of TanStack Start.
+### Prerequisites
 
-This example uses Convex with TanStack Query and TanStack Start to provide:
+Ensure you have [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) installed.
 
-- Typesafe TanStack Query options factories like `convexQuery` for use with `useQuery`, `useSuspenseQuery` etc.
-- Live-updating queries: updates come in over a WebSocket instead of requiring polling
-- Automatic query invalidation: when a mutation succeeds all queries it affects update automatically
-- Selective optimistic update rollback: when a mutation succeeds only its update will be rolled back, with other optimistic updates reapplied
-- Consistent snapshot reads of database state: /messages will never return a foreign key for a /user that doesn't exist until the next fetch
+### Installation
 
-## Getting Started
+1. **Clone the repository:**
+   ```sh
+   npx gitpick TanStack/router/tree/main/examples/react/start-convex-trellaux my-app
+   cd my-app
+   ```
+````
 
-To run this example:
+2. **Install dependencies:**
 
-```sh
-pnpm install
-pnpm dev
-```
+   ```sh
+   pnpm install
+   ```
 
-## Build
+3. **Set up Convex:**
 
-Build for production:
+   ```sh
+   pnpm dlx convex dev
+   ```
+
+   Follow the prompts to create a new project and configure your environment variables.
+
+4. **Start the development server:**
+   ```sh
+   pnpm dev
+   ```
+
+## 🏗️ Production Build
+
+To build the application for production:
 
 ```sh
 pnpm build
+pnpm start
 ```
 
-## About This Example
+## 💡 Why Convex?
 
-This example demonstrates:
+Convex replaces traditional REST or GraphQL APIs with a reactive database layer.
 
-- Convex database integration
-- Real-time updates
-- Complex UI state management
+- **Live Queries**: Hooks like `useSuspenseQuery` with `convexQuery` automatically subscribe to data changes via WebSockets.
+- **Zero Configuration**: No need for manual cache management or complex Webhook setups.
+- **ACID Transactions**: Mutations are atomic and consistent, ensuring your Trello boards never get into an invalid state.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+```
+
+```
