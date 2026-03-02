@@ -44,34 +44,41 @@ const projectsTable = defineTable({
   exportRepoUrl: v.optional(v.string()),
 }).index("by_owner_id", ["ownerId"]);
 
-const conversationTable = defineTable({
+// const conversationTable = defineTable({
+//   projectId: v.id("projects"),
+//   title: v.string(),
+//   updatedAt: v.number(),
+// }).index("by_project", ["projectId"]);
+
+const projectThreadsTable = defineTable({
   projectId: v.id("projects"),
-  title: v.string(),
-  updatedAt: v.number(),
+  threadId: v.string(), // The ID returned by the Agent component
+  userId: v.string(),
 }).index("by_project", ["projectId"]);
 
-const messageTable = defineTable({
-  conversationId: v.id("conversations"),
-  projectId: v.id("projects"),
-  role,
-  status: v.optional(
-    v.union(
-      v.literal("processing"),
-      v.literal("completed"),
-      v.literal("cancelled"),
-    ),
-  ),
-  content: v.string(),
-  updatedAt: v.number(),
-})
-  .index("by_conversation", ["conversationId"])
-  .index("by_project_status", ["projectId", "status"]);
+// const messageTable = defineTable({
+//   conversationId: v.id("conversations"),
+//   projectId: v.id("projects"),
+//   role,
+//   status: v.optional(
+//     v.union(
+//       v.literal("processing"),
+//       v.literal("completed"),
+//       v.literal("cancelled"),
+//     ),
+//   ),
+//   content: v.string(),
+//   // updatedAt: v.number(),
+// })
+// .index("by_conversation", ["conversationId"])
+// .index("by_project_status", ["projectId", "status"]);
 
 const schema = defineSchema({
   projects: projectsTable,
   files: filesTable,
-  conversations: conversationTable,
-  messages: messageTable,
+  projectThreads: projectThreadsTable,
+  // conversations: conversationTable,
+  // messages: messageTable,
 });
 export default schema;
 

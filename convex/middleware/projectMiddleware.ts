@@ -14,8 +14,7 @@ export const authorizedProjectMutation = customMutation(mutation, {
   },
   async input(ctx, args) {
     const user = await getUserOrThrow(ctx);
-
-    const project = await getProjectOrThrow(ctx, args.projectId);
+    const project = await getProjectOrThrow({ ctx, projectId: args.projectId });
 
     if (project.ownerId !== user._id) {
       throw new ConvexError("Unauthorized access to this project");
@@ -31,7 +30,7 @@ export const authorizedProjectQuery = customQuery(query, {
   async input(ctx, args) {
     const user = await getUserOrThrow(ctx);
 
-    const project = await getProjectOrThrow(ctx, args.projectId);
+    const project = await getProjectOrThrow({ ctx, projectId: args.projectId });
 
     if (project.ownerId !== user._id) {
       throw new ConvexError("Unauthorized access to this project");

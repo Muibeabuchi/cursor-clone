@@ -19,19 +19,22 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { Logo } from "~/components/logo";
 import { ProjectListSkeleton } from "~/components/project-list-skeleton";
 import toast from "react-hot-toast";
+import { useNavigate } from "@tanstack/react-router";
 
 export const ProjectsView = () => {
   const [commandDialogOpen, setCommandDialogOpen] = useState(false);
   const { mutateAsync: createProject, isPending: creatingProject } =
     useCreateProjects();
+  const navigate = useNavigate();
 
   const handleCreateProject = async () => {
     const randomName = uniqueNamesGenerator({
       dictionaries: [adjectives, colors, animals],
       separator: "-",
     });
-    await createProject({ name: randomName });
+    const projectId = await createProject({ name: randomName });
     toast.success("Project created successfully");
+    navigate({ to: `/projects/$projectId`, params: { projectId } });
   };
   useHotkeys("ctrl+k", (e) => {
     e.preventDefault();

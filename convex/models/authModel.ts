@@ -5,7 +5,7 @@ import { GenericQueryCtx } from "convex/server";
 
 export async function getUserOrThrow(ctx: GenericQueryCtx<DataModel>) {
   const user = await authComponent.getAuthUser(ctx);
-  if (!user) {
+  if (!user || !user._id) {
     throw new ConvexError("Unauthorized access to this project");
   }
   return user;

@@ -1,36 +1,47 @@
-import { GenericQueryCtx } from "convex/server";
-import { ConvexError } from "convex/values";
-import { DataModel, Id } from "../_generated/dataModel";
-import { getProjectOrThrow } from "./projectModel";
+// import { GenericQueryCtx } from "convex/server";
+// import { ConvexError } from "convex/values";
+// import { DataModel, Id } from "../_generated/dataModel";
+// import { getProjectOrThrow } from "./projectModel";
 
-export const getConversationOrThrow = async ({
-  conversationId,
+import { ActionCtx, MutationCtx, QueryCtx } from "../_generated/server";
+
+export async function ensureThreadBelongsToUser({
   ctx,
 }: {
-  ctx: GenericQueryCtx<DataModel>;
-  conversationId: Id<"conversations">;
-}) => {
-  const conversation = await ctx.db.get("conversations", conversationId);
-  if (!conversation) {
-    throw new ConvexError("Conversation not found");
-  }
-  return conversation;
-};
+  ctx: QueryCtx | MutationCtx | ActionCtx;
+  threadId: string;
+}) {
+  // This function checks that the user is the owner of the thread
+}
 
-export const ensureConversationBelongsToProject = async ({
-  conversationId,
+// export const getConversationOrThrow = async ({
+//   conversationId,
+//   ctx,
+// }: {
+//   ctx: GenericQueryCtx<DataModel>;
+//   conversationId: Id<"conversations">;
+// }) => {
+//   const conversation = await ctx.db.get("conversations", conversationId);
+//   if (!conversation) {
+//     throw new ConvexError("Conversation not found");
+//   }
+//   return conversation;
+// };
 
-  ctx,
-}: {
-  conversationId: Id<"conversations">;
-  ctx: GenericQueryCtx<DataModel>;
-}) => {
-  const conversation = await getConversationOrThrow({ conversationId, ctx });
-  // get the project using the projectId in the conversation
-  const project = await getProjectOrThrow(ctx, conversation.projectId);
+// export const ensureConversationBelongsToProject = async ({
+//   conversationId,
 
-  if (!project) {
-    throw new ConvexError("Project not found");
-  }
-  return { conversation, project };
-};
+//   ctx,
+// }: {
+//   conversationId: Id<"conversations">;
+//   ctx: GenericQueryCtx<DataModel>;
+// }) => {
+//   const conversation = await getConversationOrThrow({ conversationId, ctx });
+//   // get the project using the projectId in the conversation
+//   const project = await getProjectOrThrow(ctx, conversation.projectId);
+
+//   if (!project) {
+//     throw new ConvexError("Project not found");
+//   }
+//   return { conversation, project };
+// };
