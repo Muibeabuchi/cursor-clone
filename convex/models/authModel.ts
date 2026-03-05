@@ -1,9 +1,18 @@
 import { ConvexError } from "convex/values";
 import { authComponent } from "../auth";
 import type { DataModel } from "../_generated/dataModel";
-import { GenericQueryCtx } from "convex/server";
+import {
+  GenericQueryCtx,
+  GenericMutationCtx,
+  GenericActionCtx,
+} from "convex/server";
 
-export async function getUserOrThrow(ctx: GenericQueryCtx<DataModel>) {
+export async function getUserOrThrow(
+  ctx:
+    | GenericQueryCtx<DataModel>
+    | GenericMutationCtx<DataModel>
+    | GenericActionCtx<DataModel>,
+) {
   const user = await authComponent.getAuthUser(ctx);
   if (!user || !user._id) {
     throw new ConvexError("Unauthorized access to this project");

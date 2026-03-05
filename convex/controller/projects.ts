@@ -7,6 +7,7 @@ import {
   authenticatedQuery,
 } from "../middleware/authMiddleware";
 import { ConvexError, v } from "convex/values";
+import { query } from "../_generated/server";
 
 export const getPartial = authenticatedQuery({
   args: {
@@ -46,6 +47,10 @@ export const getById = authorizedProjectQuery({
   },
 });
 
+// ==========================AGENT TOOLS======================================//
+
+// ---------------------------------MUTATIONS---------------------------------//
+
 export const renameProjectName = authorizedProjectMutation({
   args: {
     name: v.string(),
@@ -58,8 +63,6 @@ export const renameProjectName = authorizedProjectMutation({
     });
   },
 });
-
-// ---------------------------------MUTATIONS---------------------------------//
 
 export const create = authenticatedMutation({
   args: {

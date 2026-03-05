@@ -10,5 +10,18 @@ const gptOss120bOpenRouterProvider = openrouter.chat(
 const glmAirModel = openrouter.chat("z-ai/glm-4.5-air:free");
 
 const qwen3Coder = openrouter.chat("qwen/qwen3-coder:free");
+// const qwenTextEmbeddingModel = openrouter.embeddingModel(
+//   "qwen/qwen3-embedding-8b",
+// );
 
-export { gptOss120bOpenRouterProvider, glmAirModel, qwen3Coder };
+const mistralEmbedModel = openrouter.textEmbeddingModel(
+  "mistralai/mistral-embed-2312",
+);
+
+export {
+  gptOss120bOpenRouterProvider,
+  glmAirModel,
+  qwen3Coder,
+  mistralEmbedModel,
+  // qwenTextEmbeddingModel,
+};

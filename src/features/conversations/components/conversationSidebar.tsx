@@ -33,6 +33,9 @@ import {
   // useSendMessage,
 } from "../hooks/use-conversations";
 import { PastConversationsDialog } from "./past-conversations-dialog";
+import { useUIMessages } from "@convex-dev/agent/react";
+import { api } from "convex/_generated/api";
+import { useSendMessage } from "~/features/messages/hooks/useMessages";
 
 export const DEFAULT_CONVERSATION = "New Conversation";
 
@@ -66,8 +69,28 @@ export const ConversationSidebar = ({
     projectThreadId: activeConversation,
   });
 
+  const {
+    results: messages,
+    status,
+    loadMore,
+  } = useUIMessages(
+    api.controller.messages.getMessagesByProjectThreadId,
+    conversation && activeConversation
+      ? {
+          threadId: conversation.thread._id,
+          projectThreadId: activeConversation,
+        }
+      : "skip",
+    {
+      initialNumItems: 20,
+      stream: true,
+    },
+  );
+
+  const sendMessage = useSendMessage();
+
   // check if any of the messages in this thread is still processing
-  // const isProcessing = messages?.some((m) => m.status === "processing");
+  const isProcessing = messages?.some((m) => m.status === "streaming");
 
   const handleCreateConversation = async () => {
     try {
@@ -85,19 +108,24 @@ export const ConversationSidebar = ({
   };
 
   const handleSubmit = async (message: PromptInputMessage) => {
-    // if (isProcessing || !message.text.trim()) {
-    //   // TODO: await handleCancel()
-    //   setInput("");
-    //   return;
-    // }
+    if (!conversation) return;
+    if (isProcessing || !message.text.trim()) {
+      // TODO: await handleCancel()
+      setInput("");
+      return;
+    }
 
-    let conversationId: Id<"projectThreads"> | null | undefined =
-      activeConversation;
+    let conversationId: Id<"projectThreads"> | null = activeConversation;
     if (!conversationId) {
       conversationId = await handleCreateConversation();
       if (!conversationId) return;
     }
     // call convex function that continues a thread
+    await sendMessage.mutateAsync({
+      threadId: conversation.projectThread.threadId,
+      projectThreadId: conversationId,
+      prompt: message.text,
+    });
 
     setInput("");
   };
@@ -130,6 +158,44 @@ export const ConversationSidebar = ({
         </div>
         <Conversation className="flex-1">
           {/* conversationContent */}
+          <ConversationContent>
+            {messages?.map((message, messageIndex) => (
+              <Message
+                key={message.id}
+                from={message.role === "user" ? "user" : "assistant"}
+              >
+                <MessageContent>
+                  {message.status === "streaming" ? (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <LoaderIcon className="size-3.5 animate-spin" />
+                      <span>{message.text || "Thinking..."}</span>
+                    </div>
+                  ) : (
+                    <MessageResponse>{message.text}</MessageResponse>
+                  )}
+                </MessageContent>
+                {message.role === "assistant" &&
+                  message.status === "success" &&
+                  messageIndex === (messages.length ?? 0) - 1 && (
+                    <MessageActions>
+                      <MessageAction
+                        onClick={() => {
+                          navigator.clipboard.writeText(message.text);
+                          toast.success("Copied to clipboard");
+                        }}
+                        label="Copy"
+                      >
+                        <CopyIcon className="size-3.3" />
+                      </MessageAction>
+                      {/* <MessageAction>
+                       <RegenerateIcon className="size-3.5" />
+                       Regenerate
+                     </MessageAction> */}
+                    </MessageActions>
+                  )}
+              </Message>
+            ))}
+          </ConversationContent>
           <ConversationScrollButton />
         </Conversation>
         <div className="p-3">
@@ -139,14 +205,14 @@ export const ConversationSidebar = ({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask Koda anything..."
-                // disabled={isProcessing}
+                disabled={isProcessing}
               />
             </PromptInputBody>
             <PromptInputFooter>
               <PromptInputTools />
               <PromptInputSubmit
-              // disabled={isProcessing ? false : !input}
-              // status={isProcessing ? "streaming" : undefined}
+                disabled={isProcessing ? false : !input}
+                status={isProcessing ? "streaming" : undefined}
               />
             </PromptInputFooter>
           </PromptInput>
@@ -161,43 +227,4 @@ export const ConversationSidebar = ({
   );
 };
 
-// <ConversationContent>
-//           {messages?.map((message, messageIndex) => (
-//             <Message
-//               key={message._id}
-//               from={message.role === "user" ? "user" : "assistant"}
-//             >
-//               <MessageContent>
-//                 {message.status === "processing" ? (
-//                   <div className="flex items-center gap-2 text-muted-foreground">
-//                     <LoaderIcon className="size-3.5 animate-spin" />
-//                     <span>{message.content || "Thinking..."}</span>
-//                   </div>
-//                 ) : (
-//                   <MessageResponse>{message.content}</MessageResponse>
-//                 )}
-//               </MessageContent>
-//               {message.role === "assistant" &&
-//                 message.status === "completed" &&
-//                 messageIndex === (messages.length ?? 0) - 1 && (
-//                   <MessageActions>
-//                     <MessageAction
-//                       onClick={() => {
-//                         navigator.clipboard.writeText(message.content);
-//                         toast.success("Copied to clipboard");
-//                       }}
-//                       label="Copy"
-//                     >
-//                       <CopyIcon className="size-3.3" />
-//                     </MessageAction>
-//                     {/* <MessageAction>
-//                       <RegenerateIcon className="size-3.5" />
-//                       Regenerate
-//                     </MessageAction> */}
-//                   </MessageActions>
-//                 )}
-//             </Message>
-//           ))}
-
-//            */}
-//         </ConversationContent>
+//
