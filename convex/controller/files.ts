@@ -97,8 +97,20 @@ export type getFilePathType = FunctionReturnType<
   typeof api.controller.files.getFilePath
 >;
 
-//* Used for Agent "ListFiles" tool
 export const getProjectFiles = authorizedProjectQuery({
+  args: {
+    projectId: v.id("projects"),
+  },
+  async handler(ctx, args) {
+    return await ctx.db
+      .query("files")
+      .withIndex("by_project", (q) => q.eq("projectId", args.projectId))
+      .collect();
+  },
+});
+
+//* Used for Agent "ListFiles" tool
+export const getProjectFilesTool = query({
   args: {
     projectId: v.id("projects"),
   },

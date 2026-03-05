@@ -123,6 +123,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
       <head>
+        <script
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+        ></script>
         <HeadContent />
       </head>
       <body>

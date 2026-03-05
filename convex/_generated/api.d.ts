@@ -8,11 +8,13 @@
  * @module
  */
 
-import type * as agents_conversationWorkflow from "../agents/conversationWorkflow.js";
-import type * as agents_tools from "../agents/tools.js";
+import type * as aiAgents_conversationWorkflow from "../aiAgents/conversationWorkflow.js";
+import type * as aiAgents_helpers from "../aiAgents/helpers.js";
+import type * as aiAgents_tools from "../aiAgents/tools.js";
 import type * as auth from "../auth.js";
 import type * as components_agent from "../components/agent.js";
 import type * as components_workflow from "../components/workflow.js";
+import type * as controller_conversationStreamInfo from "../controller/conversationStreamInfo.js";
 import type * as controller_files from "../controller/files.js";
 import type * as controller_messages from "../controller/messages.js";
 import type * as controller_projectThread from "../controller/projectThread.js";
@@ -36,11 +38,13 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  "agents/conversationWorkflow": typeof agents_conversationWorkflow;
-  "agents/tools": typeof agents_tools;
+  "aiAgents/conversationWorkflow": typeof aiAgents_conversationWorkflow;
+  "aiAgents/helpers": typeof aiAgents_helpers;
+  "aiAgents/tools": typeof aiAgents_tools;
   auth: typeof auth;
   "components/agent": typeof components_agent;
   "components/workflow": typeof components_workflow;
+  "controller/conversationStreamInfo": typeof controller_conversationStreamInfo;
   "controller/files": typeof controller_files;
   "controller/messages": typeof controller_messages;
   "controller/projectThread": typeof controller_projectThread;

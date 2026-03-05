@@ -37,6 +37,7 @@ import { useUIMessages } from "@convex-dev/agent/react";
 import { api } from "convex/_generated/api";
 import { useSendMessage } from "~/features/messages/hooks/useMessages";
 import SmoothMessage from "~/features/messages/components/smoothMessage";
+import { useMutation } from "convex/react";
 
 export const DEFAULT_CONVERSATION = "New Conversation";
 
@@ -58,6 +59,9 @@ export const ConversationSidebar = ({
       numItems: 20,
     },
   });
+  const abortStreamById = useMutation(
+    api.controller.messages.cancelProcessMessageAgentWorkflow,
+  );
   const createConversation = useCreateConversation();
   const activeConversation =
     selectedConversationId ??
@@ -100,7 +104,7 @@ export const ConversationSidebar = ({
         title: DEFAULT_CONVERSATION,
       });
       setSelectedConversationId(projectThreadId);
-      toast.success("Conversation created");
+      toast("Conversation created");
       return projectThreadId;
     } catch (error) {
       toast.error("Failed to create conversation");
@@ -110,8 +114,13 @@ export const ConversationSidebar = ({
 
   const handleSubmit = async (message: PromptInputMessage) => {
     if (!conversation) return;
-    if (isProcessing || !message.text.trim()) {
+    // if (!activeConversation) return;
+    if (activeConversation && (isProcessing || !message.text.trim())) {
       // TODO: await handleCancel()
+      abortStreamById({
+        threadId: conversation.thread._id,
+        projectThreadId: activeConversation,
+      });
       setInput("");
       return;
     }

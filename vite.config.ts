@@ -14,7 +14,18 @@ export default defineConfig({
       projects: ["./tsconfig.json"],
     }),
     tanstackStart(),
-    viteReact(),
+    viteReact({
+      babel: {
+        plugins: [
+          [
+            "babel-plugin-react-compiler",
+            {
+              target: "19",
+            },
+          ],
+        ],
+      },
+    }),
   ],
   ssr: {
     noExternal: ["@convex-dev/better-auth"],
