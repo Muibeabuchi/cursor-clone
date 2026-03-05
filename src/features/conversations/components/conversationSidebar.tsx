@@ -36,6 +36,7 @@ import { PastConversationsDialog } from "./past-conversations-dialog";
 import { useUIMessages } from "@convex-dev/agent/react";
 import { api } from "convex/_generated/api";
 import { useSendMessage } from "~/features/messages/hooks/useMessages";
+import SmoothMessage from "~/features/messages/components/smoothMessage";
 
 export const DEFAULT_CONVERSATION = "New Conversation";
 
@@ -159,42 +160,15 @@ export const ConversationSidebar = ({
         <Conversation className="flex-1">
           {/* conversationContent */}
           <ConversationContent>
-            {messages?.map((message, messageIndex) => (
-              <Message
-                key={message.id}
-                from={message.role === "user" ? "user" : "assistant"}
-              >
-                <MessageContent>
-                  {message.status === "streaming" ? (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <LoaderIcon className="size-3.5 animate-spin" />
-                      <span>{message.text || "Thinking..."}</span>
-                    </div>
-                  ) : (
-                    <MessageResponse>{message.text}</MessageResponse>
-                  )}
-                </MessageContent>
-                {message.role === "assistant" &&
-                  message.status === "success" &&
-                  messageIndex === (messages.length ?? 0) - 1 && (
-                    <MessageActions>
-                      <MessageAction
-                        onClick={() => {
-                          navigator.clipboard.writeText(message.text);
-                          toast.success("Copied to clipboard");
-                        }}
-                        label="Copy"
-                      >
-                        <CopyIcon className="size-3.3" />
-                      </MessageAction>
-                      {/* <MessageAction>
-                       <RegenerateIcon className="size-3.5" />
-                       Regenerate
-                     </MessageAction> */}
-                    </MessageActions>
-                  )}
-              </Message>
-            ))}
+            {messages?.map((message, messageIndex) => {
+              return (
+                <SmoothMessage
+                  message={message}
+                  messageIndex={messageIndex}
+                  messages={messages}
+                />
+              );
+            })}
           </ConversationContent>
           <ConversationScrollButton />
         </Conversation>
@@ -220,6 +194,10 @@ export const ConversationSidebar = ({
       </div>
       <PastConversationsDialog
         projectId={projectId}
+        onSelect={(conversationId) => {
+          setSelectedConversationId(conversationId);
+          setPastConversationCommandOpen(false);
+        }}
         open={pastConversationCommandOpen}
         onOpenChange={setPastConversationCommandOpen}
       />
