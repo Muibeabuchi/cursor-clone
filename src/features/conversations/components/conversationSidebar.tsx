@@ -63,15 +63,15 @@ export const ConversationSidebar = ({
     api.controller.messages.cancelProcessMessageAgentWorkflow,
   );
   const createConversation = useCreateConversation();
-  const activeConversation =
+  const activeConversationId =
     selectedConversationId ??
     (conversations?.page?.[0]?.filteredProjecthread
       ?._id as Id<"projectThreads"> | null) ??
     null;
 
-  console.log("activeConversation", activeConversation);
+  console.log("activeConversationId", activeConversationId);
   const { data: conversation } = useConversation({
-    projectThreadId: activeConversation,
+    projectThreadId: activeConversationId,
   });
 
   const {
@@ -80,10 +80,10 @@ export const ConversationSidebar = ({
     loadMore,
   } = useUIMessages(
     api.controller.messages.getMessagesByProjectThreadId,
-    conversation && activeConversation
+    conversation && activeConversationId
       ? {
           threadId: conversation.thread._id,
-          projectThreadId: activeConversation,
+          projectThreadId: activeConversationId,
         }
       : "skip",
     {
@@ -104,7 +104,7 @@ export const ConversationSidebar = ({
         title: DEFAULT_CONVERSATION,
       });
       setSelectedConversationId(projectThreadId);
-      toast("Conversation created");
+      toast.success("Conversation created");
       return projectThreadId;
     } catch (error) {
       toast.error("Failed to create conversation");
@@ -113,19 +113,25 @@ export const ConversationSidebar = ({
   };
 
   const handleSubmit = async (message: PromptInputMessage) => {
+    // console.log("handle submit has been called");
     if (!conversation) return;
-    // if (!activeConversation) return;
-    if (activeConversation && (isProcessing || !message.text.trim())) {
+    if (!activeConversationId) {
+      toast.warning("create a conversation");
+      return;
+    }
+    // if (!activeConversationId) return;
+    if (activeConversationId && (isProcessing || !message.text.trim())) {
       // TODO: await handleCancel()
       abortStreamById({
         threadId: conversation.thread._id,
-        projectThreadId: activeConversation,
+        projectThreadId: activeConversationId,
       });
       setInput("");
       return;
     }
+    console.log("handle submit has been called");
 
-    let conversationId: Id<"projectThreads"> | null = activeConversation;
+    let conversationId: Id<"projectThreads"> | null = activeConversationId;
     if (!conversationId) {
       conversationId = await handleCreateConversation();
       if (!conversationId) return;
@@ -144,9 +150,13 @@ export const ConversationSidebar = ({
     <>
       <div className="flex flex-col h-full bg-sidebar">
         <div className="h-8.75 flex items-center justify-between border-b">
-          <div className="text-sm truncate pl-3">
-            {conversation?.thread.title ?? DEFAULT_CONVERSATION}
-          </div>
+          {conversation ? (
+            <div className="text-sm truncate pl-3">
+              {conversation.thread.title ?? DEFAULT_CONVERSATION}
+            </div>
+          ) : (
+            <div className="text-sm truncate pl-3">No Conversation</div>
+          )}
           <div className="flex items-center px-1 gap-1">
             <Button
               variant="highlight"
@@ -166,21 +176,31 @@ export const ConversationSidebar = ({
             </Button>
           </div>
         </div>
-        <Conversation className="flex-1">
-          {/* conversationContent */}
-          <ConversationContent>
-            {messages?.map((message, messageIndex) => {
-              return (
-                <SmoothMessage
-                  message={message}
-                  messageIndex={messageIndex}
-                  messages={messages}
-                />
-              );
-            })}
-          </ConversationContent>
-          <ConversationScrollButton />
-        </Conversation>
+        {conversation ? (
+          <Conversation className="flex-1">
+            {/* conversationContent */}
+            <ConversationContent>
+              {messages?.map((message, messageIndex) => {
+                return (
+                  <SmoothMessage
+                    message={message}
+                    messageIndex={messageIndex}
+                    messages={messages}
+                  />
+                );
+              })}
+            </ConversationContent>
+            <ConversationScrollButton />
+          </Conversation>
+        ) : (
+          <div className="flex-1">
+            <div className="flex items-center justify-center h-full">
+              <div className="text-sm text-muted-foreground">
+                No conversation selected
+              </div>
+            </div>
+          </div>
+        )}
         <div className="p-3">
           <PromptInput onSubmit={handleSubmit} className="mt-2">
             <PromptInputBody>
@@ -188,13 +208,13 @@ export const ConversationSidebar = ({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask Koda anything..."
-                disabled={isProcessing}
+                disabled={isProcessing || !conversation}
               />
             </PromptInputBody>
             <PromptInputFooter>
               <PromptInputTools />
               <PromptInputSubmit
-                disabled={isProcessing ? false : !input}
+                disabled={isProcessing ? false : !input || !conversation}
                 status={isProcessing ? "streaming" : undefined}
               />
             </PromptInputFooter>

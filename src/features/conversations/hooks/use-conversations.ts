@@ -12,7 +12,7 @@ const conversationQueryOptions = {
     projectThreadId: Id<"projectThreads"> | null;
   }) =>
     convexQuery(
-      api.controller.projectThread.geConversationByProjectThreadId,
+      api.controller.projectThread.getConversationByProjectThreadId,
       projectThreadId
         ? {
             projectThreadId,

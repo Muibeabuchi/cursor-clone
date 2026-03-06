@@ -29,6 +29,7 @@ import type * as models_authModel from "../models/authModel.js";
 import type * as models_conversationModel from "../models/conversationModel.js";
 import type * as models_fileModel from "../models/fileModel.js";
 import type * as models_projectModel from "../models/projectModel.js";
+import type * as playground from "../playground.js";
 import type * as utils_constants from "../utils/constants.js";
 
 import type {
@@ -59,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   "models/conversationModel": typeof models_conversationModel;
   "models/fileModel": typeof models_fileModel;
   "models/projectModel": typeof models_projectModel;
+  playground: typeof playground;
   "utils/constants": typeof utils_constants;
 }>;
 

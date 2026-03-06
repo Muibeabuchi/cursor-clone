@@ -26,6 +26,9 @@ export const projectConversationAgent = new Agent(components.agent, {
   embeddingModel: mistralEmbedModel,
   instructions: CODING_AGENT_SYSTEM_PROMPT,
   stopWhen: stepCountIs(10),
+  storageOptions: {
+    saveMessages: "all",
+  },
   tools: {
     readFilesTool,
     updateFileTool,

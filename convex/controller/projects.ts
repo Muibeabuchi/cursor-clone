@@ -8,6 +8,8 @@ import {
 } from "../middleware/authMiddleware";
 import { ConvexError, v } from "convex/values";
 import { query } from "../_generated/server";
+import { createThread } from "@convex-dev/agent";
+import { components } from "../_generated/api";
 
 export const getPartial = authenticatedQuery({
   args: {
@@ -71,12 +73,23 @@ export const create = authenticatedMutation({
   async handler(ctx, args) {
     const { _id: userId } = ctx.user;
 
-    const project = await ctx.db.insert("projects", {
+    const projectId = await ctx.db.insert("projects", {
       name: args.name,
       ownerId: userId,
       updatedAt: Date.now(),
     });
 
-    return project;
+    // const threadId = await createThread(ctx, components.agent, {
+    //   userId,
+    // });
+
+    // // create a conversation for this project
+    // await ctx.db.insert("projectThreads", {
+    //   projectId,
+    //   threadId,
+    //   userId,
+    // });
+
+    return projectId;
   },
 });

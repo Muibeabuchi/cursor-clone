@@ -15,6 +15,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   PlayCircleIcon,
+  AlertOctagon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CopyIcon } from "lucide-react";
@@ -38,6 +39,8 @@ const ToolCallUI = ({
   // const toolName = toolCallNames;
   const toolName = toolCall.type.replace("tool-", "");
   const state = toolCall.state;
+
+  // UIMessagePart<UIDataTypes, UITools>;
 
   switch (state) {
     case "input-streaming":
@@ -108,8 +111,12 @@ const SmoothMessage = ({
       startStreaming: message.status === "streaming",
     },
   );
-  const toolCalls = message.parts.filter(
-    (p): p is ToolUIPart => p.type === "dynamic-tool",
+
+  console.log({ messages });
+
+  // const toolName = toolCall.type.replace("tool-", "");
+  const toolCalls = message.parts.filter((p): p is ToolUIPart =>
+    p.type.startsWith("tool-"),
   );
 
   console.log({ toolCalls });
@@ -133,32 +140,38 @@ const SmoothMessage = ({
       from={message.role === "user" ? "user" : "assistant"}
     >
       <MessageContent>
+        {toolCalls.length > 0 && (
+          <div className="mb-3 flex flex-col gap-1.5 w-full">
+            {toolCalls.map((toolCall, idx) => (
+              <ToolCallUI key={idx} toolCall={toolCall} />
+            ))}
+          </div>
+        )}
+
         {reasoningText && (
           <Collapsible
             open={isReasoningOpen}
             onOpenChange={setIsReasoningOpen}
-            className="mb-2 w-full space-y-2 rounded-md border border-border/50 bg-muted/30 p-2"
+            className=" w-full h-full   rounded-md border border-border/50 bg-muted/30 "
           >
-            <div className="flex items-center justify-between space-x-4 px-2">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                <BrainIcon className="size-3.5" />
-                <span>Thought Process</span>
-              </div>
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  className="w-6 h-6 p-0 hover:bg-transparent text-muted-foreground hover:text-foreground"
-                >
-                  {isReasoningOpen ? (
-                    <ChevronUpIcon className="size-3.5" />
-                  ) : (
-                    <ChevronDownIcon className="size-3.5" />
-                  )}
-                  <span className="sr-only">Toggle reasoning</span>
-                </Button>
-              </CollapsibleTrigger>
-            </div>
+            <CollapsibleTrigger className="p-0" asChild>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                className="w-full h-full p-2 hover:bg-transparent text-muted-foreground hover:text-foreground flex items-center justify-between space-x-4 "
+              >
+                <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                  <BrainIcon className="size-3.5" />
+                  <span>Thought Process</span>
+                </div>
+                {isReasoningOpen ? (
+                  <ChevronUpIcon className="size-3.5" />
+                ) : (
+                  <ChevronDownIcon className="size-3.5" />
+                )}
+                <span className="sr-only">Toggle reasoning</span>
+              </Button>
+            </CollapsibleTrigger>
             <CollapsibleContent className="px-2 pb-1">
               <div className="text-xs text-muted-foreground/80 whitespace-pre-wrap font-mono leading-relaxed">
                 {reasoningText}
@@ -167,22 +180,21 @@ const SmoothMessage = ({
           </Collapsible>
         )}
 
-        {toolCalls.length > 0 && (
-          <div className="mb-3 flex flex-col gap-1.5 w-full">
-            {toolCalls.map((toolCall, idx) => (
-              <ToolCallUI
-                key={toolCall.toolCallId || idx}
-                toolCall={toolCall}
-              />
-            ))}
-          </div>
-        )}
-
-        {message.status === "streaming" && !visibleText ? (
+        {message.status === "streaming" ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <LoaderIcon className="size-3.5 animate-spin" />
             <span>Thinking...</span>
           </div>
+        ) : message.status === "failed" ? (
+          <>
+            <AlertOctagon />
+            <MessageResponse>Error </MessageResponse>
+          </>
+        ) : message.status === "pending" && message.text === "" ? (
+          <>
+            <AlertOctagon />
+            <MessageResponse>Error Generating response</MessageResponse>
+          </>
         ) : (
           <MessageResponse>{visibleText}</MessageResponse>
         )}

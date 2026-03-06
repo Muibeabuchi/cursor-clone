@@ -68,7 +68,7 @@ export const getConversationsByProjectId = query({
   },
 });
 
-export const geConversationByProjectThreadId = query({
+export const getConversationByProjectThreadId = query({
   args: {
     projectThreadId: v.id("projectThreads"),
   },
@@ -119,10 +119,14 @@ export const createProjectThread = mutation({
     title: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const user = await getUserOrThrow(ctx);
+    // const user = await getUserOrThrow(ctx);
+    const {
+      project,
+      user: { _id: userId },
+    } = await ensureProjectBelongsTouser({ ctx, projectId: args.projectId });
 
     const threadId = await createThread(ctx, components.agent, {
-      userId: user._id,
+      userId,
       title: args.title,
     });
 
@@ -131,7 +135,7 @@ export const createProjectThread = mutation({
     const projectThreadId = await ctx.db.insert("projectThreads", {
       projectId: args.projectId,
       threadId: threadId,
-      userId: user._id,
+      userId,
     });
 
     return {
