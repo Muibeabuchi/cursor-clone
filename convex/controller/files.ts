@@ -32,11 +32,18 @@ export const getFiles = authorizedProjectQuery({
   },
 });
 
-//* Can be used for Agent "ReadFile" tool
 export const getFile = authorizedFileQuery({
   args: { fileId: v.id("files") },
   async handler(ctx) {
     return ctx.file;
+  },
+});
+
+//* Can be used for Agent "ReadFile" tool
+export const getFileById = query({
+  args: { fileId: v.id("files") },
+  async handler(ctx, args) {
+    return await ctx.db.get(args.fileId);
   },
 });
 
@@ -210,7 +217,7 @@ export const createFileToolHandler = authorizedProjectMutation({
 });
 
 //* Will be used by the Agent  for bulk "CreateFiles" tool
-export const createFilesToolHandler = authorizedProjectMutation({
+export const createFilesToolHandler = mutation({
   args: {
     parentId: v.optional(v.id("files")),
     files: v.array(
@@ -219,12 +226,13 @@ export const createFilesToolHandler = authorizedProjectMutation({
         content: v.string(),
       }),
     ),
+    projectId: v.id("projects"),
   },
   async handler(ctx, args) {
     const files = await ctx.db
       .query("files")
       .withIndex("by_project_parent", (q) =>
-        q.eq("projectId", ctx.project._id).eq("parentId", args.parentId),
+        q.eq("projectId", args.projectId).eq("parentId", args.parentId),
       )
       .collect();
 
@@ -262,7 +270,6 @@ export const createFilesToolHandler = authorizedProjectMutation({
   },
 });
 
-//* Can be used by the Agent for "CreateFolder" toool
 export const createFolder = authorizedProjectMutation({
   args: {
     parentFolderId: v.optional(v.id("files")),
@@ -313,6 +320,49 @@ export const createFolder = authorizedProjectMutation({
     });
 
     return folder;
+  },
+});
+
+//* Can be used by the Agent for "CreateFolder" toool
+export const createFolderToolHandler = mutation({
+  args: {
+    parentFolderId: v.optional(v.id("files")),
+    folderName: v.string(),
+    projectId: v.id("projects"),
+  },
+  async handler(ctx, { parentFolderId, folderName, projectId }) {
+    const project = await ctx.db.get(projectId);
+    if (!project) {
+      throw new ConvexError("Project not found");
+    }
+    const files = await ctx.db
+      .query("files")
+      .withIndex("by_project_parent", (q) =>
+        q.eq("projectId", projectId).eq("parentId", parentFolderId),
+      )
+      .collect();
+
+    const existingFolder = files.find(
+      (file) => file.fileName === folderName && file.fileType === "folder",
+    );
+
+    if (existingFolder) {
+      throw new ConvexError("Folder already exists");
+    }
+
+    const folderId = await ctx.db.insert("files", {
+      projectId: project._id,
+      parentId: parentFolderId,
+      fileName: folderName,
+      fileType: "folder",
+      updatedAt: Date.now(),
+    });
+
+    await ctx.db.patch("projects", project._id, {
+      updatedAt: Date.now(),
+    });
+
+    return folderId;
   },
 });
 
@@ -441,7 +491,6 @@ export const deleteFile = authorizedFileMutation({
   },
 });
 
-// * Can be used by the Agent for "UpdateFile" tool
 export const updateFile = authorizedFileMutation({
   args: {
     fileId: v.id("files"),
@@ -456,6 +505,22 @@ export const updateFile = authorizedFileMutation({
     });
 
     await ctx.db.patch("projects", ctx.file.projectId, {
+      updatedAt: now,
+    });
+  },
+});
+
+// * Can be used by the Agent for "UpdateFile" tool
+export const updateFileToolHandler = mutation({
+  args: {
+    fileId: v.id("files"),
+    content: v.string(),
+  },
+
+  async handler(ctx, { fileId, content }) {
+    const now = Date.now();
+    return await ctx.db.patch("files", fileId, {
+      content,
       updatedAt: now,
     });
   },

@@ -22,7 +22,12 @@ import {
   getStreamIds,
   getStreams,
 } from "../aiAgents/helpers";
-import { listFilesTool, readFilesTool } from "../aiAgents/tools";
+import {
+  createFilesTool,
+  createFolderTool,
+  listFilesTool,
+  readFilesTool,
+} from "../aiAgents/tools";
 
 export const getMessagesByProjectThreadId = query({
   args: {
@@ -201,6 +206,8 @@ export const processMessage = internalAction({
         tools: {
           readFilesTool,
           listFilesTool: listFilesTool({ projectId: args.projectId }),
+          createFilesTool: createFilesTool({ projectId: args.projectId }),
+          createFolderTool: createFolderTool({ projectId: args.projectId }),
         },
         promptMessageId: args.promptMessageId,
         // onFinish: ({}) => {},

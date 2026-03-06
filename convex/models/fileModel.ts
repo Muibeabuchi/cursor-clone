@@ -64,3 +64,17 @@ export async function deleteRecursive({
   // delete the file/folder
   await ctx.db.delete("files", fileId);
 }
+
+export async function ensureFileExists({
+  ctx,
+  fileId,
+}: {
+  ctx: GenericQueryCtx<DataModel>;
+  fileId: Id<"files">;
+}) {
+  const file = await ctx.db.get(fileId);
+  if (!file) {
+    throw new ConvexError(`File with ID ${fileId} not found`);
+  }
+  return file;
+}

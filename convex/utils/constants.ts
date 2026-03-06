@@ -31,3 +31,10 @@ Do NOT include intermediate thinking or narration. Only provide the final summar
 
 export const TITLE_GENERATOR_SYSTEM_PROMPT =
   "Generate a short, descriptive title (3-6 words) for a conversation based on the user's message. Return ONLY the title, nothing else. No quotes, no punctuation at the end.";
+
+export const toolCallNames = {
+  readFilesTool: "readFilesTool",
+  listFilesTool: "listFilesTool",
+  createFilesTool: "createFilesTool",
+  createFolderTool: "createFolderTool",
+};

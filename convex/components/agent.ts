@@ -14,7 +14,11 @@ import {
   glmAirModel,
   mistralEmbedModel,
 } from "../lib/openRouter";
-import { listFilesTool, readFilesTool } from "../aiAgents/tools";
+import {
+  // listFilesTool,
+  readFilesTool,
+  updateFileTool,
+} from "../aiAgents/tools";
 
 export const projectConversationAgent = new Agent(components.agent, {
   name: "project-conversation-agent",
@@ -24,6 +28,7 @@ export const projectConversationAgent = new Agent(components.agent, {
   stopWhen: stepCountIs(10),
   tools: {
     readFilesTool,
+    updateFileTool,
   },
 });
 
