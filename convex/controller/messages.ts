@@ -17,11 +17,7 @@ import { workflow } from "../components/workflow";
 import { vWorkflowId, WorkflowId } from "@convex-dev/workflow";
 import { ensureProjectBelongsTouser } from "../models/projectModel";
 import { projectConversationAgent } from "../components/agent";
-import {
-  abortStreamByStreamId,
-  getStreamIds,
-  getStreams,
-} from "../aiAgents/helpers";
+import { abortStreamByStreamId, getStreamIds } from "../aiAgents/helpers";
 import {
   createFilesTool,
   createFolderTool,
@@ -137,7 +133,7 @@ export const createMessage = mutation({
   },
 });
 
-export const cancelProcessMessageAgentWorkflow = mutation({
+export const cancelProcessMessageAgent = mutation({
   args: {
     threadId: v.string(),
     projectThreadId: v.id("projectThreads"),
@@ -151,14 +147,6 @@ export const cancelProcessMessageAgentWorkflow = mutation({
     if (threadId !== thread._id) {
       throw new ConvexError("Thread does not exist");
     }
-
-    const { workflowId } = await getStreams({
-      ctx,
-      threadId,
-    });
-
-    // cancel the workflow
-    await workflow.cancel(ctx, workflowId);
 
     // cancel the stream
     await abortStreamByStreamId({ ctx, threadId });
@@ -222,19 +210,6 @@ export const processMessage = internalAction({
     await result.consumeStream();
 
     console.log("stream consumed");
-    // asynchronoulsy call a mutation that loops through all the streams created and extract their stream Id and insert into the conversationStreamInfoTable
-    const streamIds = await getStreamIds({ ctx, threadId: args.threadId });
-    console.log({ streamIds });
-    await ctx.scheduler.runAfter(
-      0,
-      internal.controller.conversationStreamInfo.insertConversationStreamInfo,
-      {
-        threadId: args.threadId,
-        workflowId: args.workflowId,
-        projectId: args.projectId,
-        projectThreadId: args.projectThreadId,
-        streamIds,
-      },
-    );
+    //TODO: asynchronoulsy call a mutation that loops through all the streams created and extract their stream Id and insert into the conversationStreamInfoTable
   },
 });

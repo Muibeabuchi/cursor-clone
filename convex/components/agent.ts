@@ -15,8 +15,11 @@ import {
   mistralEmbedModel,
 } from "../lib/openRouter";
 import {
+  deleteFilesTool,
   // listFilesTool,
   readFilesTool,
+  renameFileTool,
+  scrapeUrls,
   updateFileTool,
 } from "../aiAgents/tools";
 
@@ -32,6 +35,9 @@ export const projectConversationAgent = new Agent(components.agent, {
   tools: {
     readFilesTool,
     updateFileTool,
+    renameFileTool,
+    deleteFilesTool,
+    scrapeUrls,
   },
 });
 

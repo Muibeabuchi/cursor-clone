@@ -474,7 +474,6 @@ export const renameFile = authorizedFileMutation({
   },
 });
 
-// * Can be used by Agent for "DeleteFile" tool
 export const deleteFile = authorizedFileMutation({
   args: {
     fileId: v.id("files"),
@@ -484,6 +483,28 @@ export const deleteFile = authorizedFileMutation({
     await deleteRecursive({ ctx, fileId });
 
     await ctx.db.patch("projects", ctx.file.projectId, {
+      updatedAt: Date.now(),
+    });
+
+    return fileId;
+  },
+});
+
+// * Can be used by Agent for "DeleteFile" tool
+export const deleteFileTool = mutation({
+  args: {
+    fileId: v.id("files"),
+  },
+  async handler(ctx, { fileId }) {
+    // check if the file exists
+    const file = await ctx.db.get("files", fileId);
+    if (!file) {
+      throw new ConvexError("File does not exist");
+    }
+    // recursively delete file/folder and all of its descendants
+    await deleteRecursive({ ctx, fileId });
+
+    await ctx.db.patch("projects", file.projectId, {
       updatedAt: Date.now(),
     });
 

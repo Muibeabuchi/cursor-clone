@@ -12,7 +12,7 @@ import {
   //   qwen3CoderOpenRouterProvider,
 } from "~/lib/open-router";
 import { QUICK_EDIT_PROMPT } from "~/lib/utils";
-import { firecrawl } from "~/lib/firecrawl/client";
+import { firecrawl } from "convex/lib/firecrawl/client";
 import { GEMINI_MODEL } from "~/lib/google-gemini";
 import { HAIKU_MODEL } from "~/lib/claude-ai";
 

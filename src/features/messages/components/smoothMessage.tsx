@@ -112,25 +112,10 @@ const SmoothMessage = ({
     },
   );
 
-  console.log({ messages });
-
   // const toolName = toolCall.type.replace("tool-", "");
   const toolCalls = message.parts.filter((p): p is ToolUIPart =>
     p.type.startsWith("tool-"),
   );
-
-  console.log({ toolCalls });
-
-  // this is how to show the toolcall UI
-  //  {
-  //    toolCalls.map((p) => (
-  //      <div key={p.toolCallId} className="text-xs text-gray-500">
-  //        Names generated:{" "}
-  //        {p.output ? (p.output as string[]).join(", ") : p.state}
-  //        <br />
-  //      </div>
-  //    ));
-  //  }
 
   const [isReasoningOpen, setIsReasoningOpen] = useState(false);
 
@@ -141,7 +126,7 @@ const SmoothMessage = ({
     >
       <MessageContent>
         {toolCalls.length > 0 && (
-          <div className="mb-3 flex flex-col gap-1.5 w-full">
+          <div className="flex flex-col gap-1.5 w-full">
             {toolCalls.map((toolCall, idx) => (
               <ToolCallUI key={idx} toolCall={toolCall} />
             ))}
@@ -172,6 +157,7 @@ const SmoothMessage = ({
                 <span className="sr-only">Toggle reasoning</span>
               </Button>
             </CollapsibleTrigger>
+
             <CollapsibleContent className="px-2 pb-1">
               <div className="text-xs text-muted-foreground/80 whitespace-pre-wrap font-mono leading-relaxed">
                 {reasoningText}
@@ -210,7 +196,7 @@ const SmoothMessage = ({
               }}
               label="Copy"
             >
-              <CopyIcon className="size-3.3" />
+              <CopyIcon className="size-3" />
             </MessageAction>
           </MessageActions>
         )}

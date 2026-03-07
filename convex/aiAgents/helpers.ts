@@ -46,42 +46,6 @@ export const abortStreamByStreamId = async ({
   }
 };
 
-export const getStreams = async ({
-  ctx,
-  threadId,
-}: {
-  ctx: GenericMutationCtx<DataModel> | GenericQueryCtx<DataModel>;
-  threadId: string;
-}) => {
-  const streams = await listStreams(ctx, components.agent, { threadId });
-
-  const streamInfo = await ctx.db
-    .query("conversationStreamInfo")
-    .withIndex("by_streamId", (q) => q.eq("streamId", streams[0].streamId))
-    .collect();
-
-  // lets check if the "workflowId" attached to these streaamInfo are all the same
-  const streamWorkflowIds = streamInfo.map((info) => info.workflowId);
-
-  if (streamWorkflowIds.length < 1) {
-    throw new ConvexError("No stream info found");
-  }
-
-  const isAllEqual = streamWorkflowIds.every(
-    (id) => id === streamWorkflowIds[0],
-  );
-
-  if (!isAllEqual) {
-    throw new ConvexError("Stream workflowIds are not all equal");
-  }
-
-  return {
-    streams,
-    streamInfo,
-    workflowId: streamWorkflowIds[0] as (typeof vWorkflowId)["type"],
-  };
-};
-
 // loop through all the streams created by the agent and insert their streamId into the conversationStreamInfoTable
 export const getStreamIds = async ({
   ctx,

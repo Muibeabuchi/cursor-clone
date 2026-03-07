@@ -73,21 +73,10 @@ const projectThreadsTable = defineTable({
 // .index("by_conversation", ["conversationId"])
 // .index("by_project_status", ["projectId", "status"]);
 
-const conversationStreamInfoTable = defineTable({
-  projectId: v.id("projects"),
-  projectThreadId: v.id("projectThreads"),
-  threadId: v.string(),
-  workflowId: v.string(),
-  streamId: v.string(),
-})
-  .index("by_project_thread", ["projectThreadId"])
-  .index("by_streamId", ["streamId"]);
-
 const schema = defineSchema({
   projects: projectsTable,
   files: filesTable,
   projectThreads: projectThreadsTable,
-  conversationStreamInfo: conversationStreamInfoTable,
   // conversations: conversationTable,
   // messages: messageTable,
 });
