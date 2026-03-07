@@ -5,7 +5,7 @@ import { paginationOptsValidator } from "convex/server";
 
 import { Doc, Id } from "convex/_generated/dataModel";
 
-const conversationQueryOptions = {
+export const conversationQueryOptions = {
   getConversationByProjectThreadId: ({
     projectThreadId,
   }: {

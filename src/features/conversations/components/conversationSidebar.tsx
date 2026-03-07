@@ -25,6 +25,7 @@ import {
 // import ky from "ky";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
 import {
   useConversations,
   useConversation,
@@ -60,7 +61,7 @@ export const ConversationSidebar = ({
     },
   });
   const abortStreamById = useMutation(
-    api.controller.messages.cancelProcessMessageAgentWorkflow,
+    api.controller.messages.cancelProcessMessageAgent,
   );
   const createConversation = useCreateConversation();
   const activeConversationId =
@@ -180,15 +181,64 @@ export const ConversationSidebar = ({
           <Conversation className="flex-1">
             {/* conversationContent */}
             <ConversationContent>
-              {messages?.map((message, messageIndex) => {
-                return (
-                  <SmoothMessage
-                    message={message}
-                    messageIndex={messageIndex}
-                    messages={messages}
-                  />
-                );
-              })}
+              {status === "LoadingFirstPage" ? (
+                <div className="flex flex-col gap-4 w-full p-4">
+                  <Message from="user">
+                    <MessageContent>
+                      <div className="space-y-2 flex flex-col items-end w-full">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[150px]" />
+                      </div>
+                    </MessageContent>
+                  </Message>
+                  <Message from="assistant">
+                    <MessageContent>
+                      <div className="space-y-2 w-full mt-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[220px]" />
+                      </div>
+                    </MessageContent>
+                  </Message>
+                  <Message from="assistant">
+                    <MessageContent>
+                      <div className="space-y-2 w-full mt-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[220px]" />
+                      </div>
+                    </MessageContent>
+                  </Message>
+                  <Message from="assistant">
+                    <MessageContent>
+                      <div className="space-y-2 w-full mt-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[220px]" />
+                      </div>
+                    </MessageContent>
+                  </Message>
+                  <Message from="user">
+                    <MessageContent>
+                      <div className="space-y-2 flex flex-col items-end w-full">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[150px]" />
+                      </div>
+                    </MessageContent>
+                  </Message>
+                </div>
+              ) : (
+                messages?.map((message, messageIndex) => {
+                  return (
+                    <SmoothMessage
+                      key={message.id || messageIndex}
+                      message={message}
+                      messageIndex={messageIndex}
+                      messages={messages}
+                    />
+                  );
+                })
+              )}
             </ConversationContent>
             <ConversationScrollButton />
           </Conversation>

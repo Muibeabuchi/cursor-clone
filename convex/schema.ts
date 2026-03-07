@@ -71,8 +71,7 @@ const projectThreadsTable = defineTable({
 //   // updatedAt: v.number(),
 // })
 // .index("by_conversation", ["conversationId"])
-// .index("by_project_status", ["projectId", "status"]);
-
+// .index("by_project_status", ["projectId", "status"])
 const schema = defineSchema({
   projects: projectsTable,
   files: filesTable,

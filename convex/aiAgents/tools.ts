@@ -5,7 +5,7 @@ import { DataModel, Id } from "../_generated/dataModel";
 import { GenericQueryCtx } from "convex/server";
 import { ensureFileExists } from "../models/fileModel";
 import { convexToJson } from "convex/values";
-import { firecrawl } from "../lib/firecrawl/client";
+// import { firecrawl } from "../lib/firecrawl/client";
 
 const readFilesToolSchema = z.object({
   fileIds: z
@@ -385,32 +385,12 @@ export const scrapeUrls = createTool({
       .array(z.string().url())
       .describe("Array of URLs to scrape for content"),
   }),
-  execute: async (ctx, args) => {
+  execute: async (ctx, args): Promise<string> => {
     try {
-      const results: { url: string; content: string }[] = [];
-      for (const url of args.urls) {
-        try {
-          const result = await firecrawl.scrape(url, {
-            formats: ["markdown"],
-          });
-          if (result.markdown) {
-            results.push({
-              url,
-              content: result.markdown,
-            });
-          }
-        } catch (error) {
-          results.push({
-            url,
-            content: `Failed to scrape URL:${url}`,
-          });
-        }
-
-        if (results.length === 0)
-          return `No content could be scraped from the URLs`;
-
-        return JSON.stringify(results);
-      }
+      return await ctx.runAction(
+        api.lib.firecrawl.client.scrapeUrlAction,
+        args,
+      );
     } catch (error) {
       return ` ERROR SCRAPING URLS: ${error instanceof Error ? error.message : "Unknown Error"}`;
     }

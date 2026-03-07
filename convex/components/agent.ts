@@ -20,8 +20,10 @@ import {
   readFilesTool,
   renameFileTool,
   scrapeUrls,
+  // scrapeUrls,
   updateFileTool,
 } from "../aiAgents/tools";
+// import { scrapeUrls } from "../lib/firecrawl/client";
 
 export const projectConversationAgent = new Agent(components.agent, {
   name: "project-conversation-agent",
