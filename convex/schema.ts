@@ -1,3 +1,4 @@
+import { vWorkflowId } from "@convex-dev/workflow";
 import { defineSchema, defineTable } from "convex/server";
 import { type Infer, v } from "convex/values";
 
@@ -50,6 +51,16 @@ const projectsTable = defineTable({
 //   updatedAt: v.number(),
 // }).index("by_project", ["projectId"]);
 
+const workflowThreadJoinTable = defineTable({
+  threadId: v.string(),
+  workflowId: vWorkflowId,
+  projectId: v.id("projects"),
+  userId: v.string(),
+  workflowStatus: v.union(v.literal("processing"), v.literal("cancelled")),
+})
+  .index("by_threadId", ["threadId"])
+  .index("by_workflow", ["workflowId"]);
+
 const projectThreadsTable = defineTable({
   projectId: v.id("projects"),
   threadId: v.string(), // The ID returned by the Agent component
@@ -76,6 +87,7 @@ const schema = defineSchema({
   projects: projectsTable,
   files: filesTable,
   projectThreads: projectThreadsTable,
+  workflowThread: workflowThreadJoinTable,
   // conversations: conversationTable,
   // messages: messageTable,
 });

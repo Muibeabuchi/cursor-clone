@@ -29,7 +29,7 @@ export const readFilesTool = createTool({
     try {
       const results: { id: string; name: string; content: string }[] = [];
       for (const fileId of args.fileIds) {
-        const file = await ctx.runQuery(api.controller.files.getFile, {
+        const file = await ctx.runQuery(api.controller.files.getFileById, {
           fileId: fileId as Id<"files">,
         });
         if (file && file.content) {

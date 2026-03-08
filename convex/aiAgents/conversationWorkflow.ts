@@ -11,6 +11,7 @@ export const processMessageWorkflow = workflow.define({
     promptMessageId: v.string(),
     projectId: v.id("projects"),
     projectThreadId: v.id("projectThreads"),
+    userId: v.string(),
   },
   handler: async (step, args) => {
     await step.runAction(
@@ -21,8 +22,16 @@ export const processMessageWorkflow = workflow.define({
         projectThreadId: args.projectThreadId,
         promptMessageId: args.promptMessageId,
         workflowId: step.workflowId,
+        userId: args.userId,
       },
-      { retry: true, name: "processMessageAgent" },
+      {
+        retry: {
+          maxAttempts: 2,
+          initialBackoffMs: 1000,
+          base: 1,
+        },
+        name: "processMessageAgent",
+      },
     );
   },
 });

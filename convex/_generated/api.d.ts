@@ -18,6 +18,7 @@ import type * as controller_files from "../controller/files.js";
 import type * as controller_messages from "../controller/messages.js";
 import type * as controller_projectThread from "../controller/projectThread.js";
 import type * as controller_projects from "../controller/projects.js";
+import type * as controller_workflowThread from "../controller/workflowThread.js";
 import type * as http from "../http.js";
 import type * as lib_firecrawl_client from "../lib/firecrawl/client.js";
 import type * as lib_geminiModel from "../lib/geminiModel.js";
@@ -49,6 +50,7 @@ declare const fullApi: ApiFromModules<{
   "controller/messages": typeof controller_messages;
   "controller/projectThread": typeof controller_projectThread;
   "controller/projects": typeof controller_projects;
+  "controller/workflowThread": typeof controller_workflowThread;
   http: typeof http;
   "lib/firecrawl/client": typeof lib_firecrawl_client;
   "lib/geminiModel": typeof lib_geminiModel;

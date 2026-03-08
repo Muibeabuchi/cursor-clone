@@ -9,7 +9,7 @@ import {
   listMessages,
   listStreams,
 } from "@convex-dev/agent";
-import { components, internal } from "../_generated/api";
+import { api, components, internal } from "../_generated/api";
 import { paginationOptsValidator } from "convex/server";
 import { getUserOrThrow } from "../models/authModel";
 import { processMessageWorkflow } from "../aiAgents/conversationWorkflow";
@@ -123,6 +123,10 @@ export const createMessage = mutation({
         promptMessageId: messageId,
         projectId: project._id,
         projectThreadId,
+        userId,
+      },
+      {
+        onComplete: internal.controller.workflowThread.updateWorkflowStatus,
       },
     );
 
@@ -148,8 +152,48 @@ export const cancelProcessMessageAgent = mutation({
       throw new ConvexError("Thread does not exist");
     }
 
+    // Cancel the Workflow
+    const workflowIds = await ctx.db
+      .query("workflowThread")
+      .withIndex("by_threadId", (q) => q.eq("threadId", threadId))
+      .collect();
+
+    const runningWorkflows = workflowIds.filter(
+      (workflowId) => workflowId.workflowStatus === "processing",
+    );
+    console.log({ runningWorkflows });
+    console.log({ workflowIds });
+    if (runningWorkflows.length > 0) {
+      // cancel the workflow
+      runningWorkflows.forEach(async (workflowId) => {
+        const workflowStatus = await workflow.status(
+          ctx,
+          workflowId.workflowId,
+        );
+        console.log({ workflowStatus });
+        if (workflowStatus.type === "inProgress") {
+          await workflow.cancel(ctx, workflowId.workflowId);
+          await ctx.db.patch(workflowId._id, {
+            workflowStatus: "cancelled",
+          });
+        }
+        // break;
+      });
+    }
+
     // cancel the stream
     await abortStreamByStreamId({ ctx, threadId });
+    // insert into the thread a message that indicates the generation has been cancelled
+    await projectConversationAgent.saveMessage(ctx, {
+      threadId: thread._id,
+      message: {
+        role: "assistant",
+        // a mesage that creates a new line  after the text
+        content: "\nGeneration cancelled\n",
+      },
+      skipEmbeddings: true,
+      userId: thread.userId,
+    });
   },
 });
 
@@ -181,9 +225,18 @@ export const processMessage = internalAction({
     workflowId: vWorkflowId,
     projectId: v.id("projects"),
     projectThreadId: v.id("projectThreads"),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
-    // insert info into the conversationStreamInfoTable
+    // insert info into the wrokflowThreadJoinTable
+
+    await ctx.runMutation(api.controller.workflowThread.create, {
+      threadId: args.threadId,
+      workflowId: args.workflowId,
+      projectId: args.projectId,
+      userId: args.userId,
+      workflowStatus: "processing",
+    });
 
     const result = await projectConversationAgent.streamText(
       ctx,

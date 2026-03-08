@@ -16,6 +16,7 @@ import {
   XCircleIcon,
   PlayCircleIcon,
   AlertOctagon,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CopyIcon } from "lucide-react";
@@ -178,7 +179,8 @@ const SmoothMessage = ({
           </>
         ) : message.status === "pending" && message.text === "" ? (
           <>
-            <AlertOctagon />
+            {/* appropriate icon for failed generation */}
+            <AlertCircle />
             <MessageResponse>Error Generating response</MessageResponse>
           </>
         ) : (
