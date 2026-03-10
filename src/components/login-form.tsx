@@ -66,7 +66,7 @@ export function LoginForm({
                 <Button
                   variant="outline"
                   type="button"
-                  // onClick={signInWithGithub}
+                  onClick={signInWithGithub}
                 >
                   <FaGithub />
                   Login with GitHub

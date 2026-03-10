@@ -166,20 +166,20 @@ export const cancelProcessMessageAgent = mutation({
     console.log({ workflowIds });
     if (runningWorkflows.length > 0) {
       // cancel the workflow
-      runningWorkflows.forEach(async (workflowId) => {
+      for (const worflowThread of runningWorkflows) {
         const workflowStatus = await workflow.status(
           ctx,
-          workflowId.workflowId,
+          worflowThread.workflowId,
         );
         console.log({ workflowStatus });
         if (workflowStatus.type === "inProgress") {
-          await workflow.cancel(ctx, workflowId.workflowId);
-          await ctx.db.patch(workflowId._id, {
+          await workflow.cancel(ctx, worflowThread.workflowId);
+          await ctx.db.patch(worflowThread._id, {
             workflowStatus: "cancelled",
           });
         }
         // break;
-      });
+      }
     }
 
     // cancel the stream

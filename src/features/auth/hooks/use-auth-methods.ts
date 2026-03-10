@@ -16,7 +16,7 @@ export function useSignOut() {
             queryKey: authQueryOptions().queryKey,
           });
           router.invalidate();
-          router.navigate({ to: "/sign-in" });
+          router.navigate({ to: "/sign-in", replace: true });
         },
       },
     });
@@ -85,7 +85,8 @@ export function useGithubAuth() {
       },
       {
         onSuccess() {
-          router.navigate({ to: "/" });
+          // router.invalidate();
+          router.navigate({ to: "/", replace: true });
         },
       },
     );

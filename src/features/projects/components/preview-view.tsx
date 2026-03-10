@@ -48,7 +48,9 @@ export const PreviewView = ({ projectId }: { projectId: Id<"projects"> }) => {
             </div>
           )}
           {previewUrl && <span className="truncate">{previewUrl}</span>}{" "}
-          {previewUrl && !isLoading && !error && <span> Ready to preview</span>}
+          {previewUrl && !isLoading && !error && (
+            <span className="ml-1"> Ready to preview</span>
+          )}
         </div>
 
         <Button
@@ -92,7 +94,7 @@ export const PreviewView = ({ projectId }: { projectId: Id<"projects"> }) => {
                 </div>
               )}
 
-              {previewUrl && (
+              {previewUrl && !error && (
                 <iframe
                   src={previewUrl}
                   className="size-full border-0"

@@ -25,7 +25,6 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { signIn } = useSignIn();
   const { signUp } = useSignUp();
   const { signInWithGithub } = useGithubAuth();
 
@@ -224,10 +223,11 @@ export function SignupForm({
                 <Button
                   variant="outline"
                   type="button"
+                  onClick={signInWithGithub}
                   disabled={signUpForm.state.isSubmitting}
                 >
                   <FaGithub />
-                  <span className="sr-only">Sign up with GitHub</span>
+                  <span>Sign up with GitHub</span>
                 </Button>
               </Field>
               <FieldDescription className="text-center">

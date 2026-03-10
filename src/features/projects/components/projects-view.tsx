@@ -65,7 +65,7 @@ export const ProjectsView = () => {
         <div className="max-w-sm mx-auto flex-col w-full flex gap-4 items-center">
           <div className="flex justify-between w-full items-center gap-4">
             <div className="flex items-center gap-2 w-full group/logo">
-              <Logo className="size-[32px] md:size-[46px] rounded-full" />
+              <Logo className="size-[32px] md:size-[46px] rounded-full " />
               <h1
                 className={cn("text-4xl md:text-5xl font-semibold text-white")}
               >

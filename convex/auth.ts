@@ -28,8 +28,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     ],
     socialProviders: {
       github: {
-        clientId: process.env.GITHUB_CLIENT_ID!,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+        clientId: process.env.GITHUB_OAUTH_CLIENT_ID!,
+        clientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET!,
+        scope: ["read:user", "repo", "user:email"],
       },
     },
   });
