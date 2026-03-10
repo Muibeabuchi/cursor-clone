@@ -114,7 +114,7 @@ export const createMessage = mutation({
       );
     }
 
-    //Todo: GENERATE AGENT RESPONSE BY CALLING WORKFLOW
+    // GENERATE AGENT RESPONSE BY CALLING WORKFLOW
     const workflowId = await workflow.start(
       ctx,
       internal.aiAgents.conversationWorkflow.processMessageWorkflow,
@@ -126,7 +126,8 @@ export const createMessage = mutation({
         userId,
       },
       {
-        onComplete: internal.controller.workflowThread.updateWorkflowStatus,
+        onComplete: api.controller.workflowThread.updateWorkflowStatus,
+        context: "",
       },
     );
 

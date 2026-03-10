@@ -40,7 +40,7 @@ export function Tree({
   const deleteFile = useDeleteFile();
   const renameFile = useRenameFile();
 
-  const { openFile, closeTab, closeAllTabs, activeTabId } =
+  const { openFile, closeTab, closeAllTabs, activeTabId, setActiveTab } =
     useEditor(projectId);
 
   const folderContents = useFolderContents({
@@ -59,14 +59,16 @@ export function Tree({
     setCreating(null);
   };
 
-  const handleCreate = (name: string) => {
+  const handleCreate = async (name: string) => {
     if (creating === "file") {
-      createFile.mutate({
+      const fileId = await createFile.mutateAsync({
         fileName: name,
         content: "",
         parentFolderId: item._id,
         projectId,
       });
+      console.log(`created file with id of ${fileId}`);
+      openFile(fileId);
     } else {
       createFolder.mutate({
         folderName: name,
@@ -75,10 +77,12 @@ export function Tree({
       });
     }
     setCreating(null);
+    // open the file in the
     // stopCreating();
   };
 
   const handleRename = (name: string) => {
+    console.log("about to rename");
     setIsRenaming(false);
     if (name === item.fileName) {
       return;

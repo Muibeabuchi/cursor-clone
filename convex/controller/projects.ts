@@ -10,6 +10,7 @@ import { ConvexError, v } from "convex/values";
 import { query } from "../_generated/server";
 import { createThread } from "@convex-dev/agent";
 import { components } from "../_generated/api";
+import { projectSettings } from "../schema";
 
 export const getPartial = authenticatedQuery({
   args: {
@@ -91,5 +92,18 @@ export const create = authenticatedMutation({
     // });
 
     return projectId;
+  },
+});
+
+export const updateSettings = authorizedProjectMutation({
+  args: {
+    settings: projectSettings,
+  },
+  async handler(ctx, args) {
+    const { project } = ctx;
+    await ctx.db.patch("projects", project._id, {
+      settings: args.settings,
+      updatedAt: Date.now(),
+    });
   },
 });

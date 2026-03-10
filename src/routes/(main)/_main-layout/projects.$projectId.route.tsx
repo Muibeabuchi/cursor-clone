@@ -26,11 +26,14 @@ export const Route = createFileRoute(
         paginationOpts: { cursor: null, numItems: 20 },
       }),
     );
-    await context.queryClient.ensureQueryData(
-      conversationQueryOptions.getConversationByProjectThreadId({
-        projectThreadId: conversations.page?.[0]?.filteredProjecthread?._id,
-      }),
-    );
+    if (conversations.page.length > 0) {
+      await context.queryClient.ensureQueryData(
+        conversationQueryOptions.getConversationByProjectThreadId({
+          projectThreadId:
+            conversations.page?.[0]?.filteredProjecthread?._id ?? undefined,
+        }),
+      );
+    }
     const [_, project] = await Promise.all([
       context.queryClient.ensureQueryData(
         fileQueryOptions.getInitialProjectFolderContents({ projectId }),

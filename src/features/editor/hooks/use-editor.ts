@@ -7,7 +7,7 @@ export const useEditor = (projectId: Id<"projects">) => {
   const tabState = useEditorStore((store) => store.getTabState(projectId));
 
   const openFile = useCallback(
-    (fileId: Id<"files">, options: { pinned: boolean }) => {
+    (fileId: Id<"files">, options: { pinned: boolean } = { pinned: false }) => {
       editorStore.openFile(projectId, fileId, options);
     },
     [editorStore, projectId],

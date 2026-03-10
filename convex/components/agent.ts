@@ -4,6 +4,7 @@ import {
   gemini2_5Embedding,
   gemini2_5FlashLite,
   gemini2_5Pro,
+  gemini2_5Flash,
 } from "../lib/geminiModel";
 import {
   TITLE_GENERATOR_SYSTEM_PROMPT,

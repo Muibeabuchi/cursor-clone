@@ -39,15 +39,15 @@ export function LoginForm({
       password: "",
     },
     onSubmit: async ({ value: { email, password } }) => {
-      console.log({ email, password });
+      // console.log({ email, password });
       const { data, error } = await signIn({ email, password });
 
       if (error) {
-        console.log(error);
+        // console.log(error);
         toast.error("Failed to login");
       }
 
-      console.log(data);
+      // console.log(data);
       toast.success("Login successful");
       router.navigate({ to: "/" });
     },

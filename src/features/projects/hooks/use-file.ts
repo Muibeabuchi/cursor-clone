@@ -66,10 +66,27 @@ export const fileQueryOptions = {
         : "skip",
     );
   },
+  getFiles: ({
+    projectId,
+    // enabled,
+  }: {
+    projectId: Id<"projects">;
+    // enabled: boolean;
+  }) => {
+    // if(!enabled) return;
+    // const enabled = !!projectId;
+    return convexQuery(api.controller.files.getFiles, {
+      projectId,
+    });
+  },
 };
 
 export const useFile = ({ fileId }: { fileId: Id<"files"> | null }) => {
   return useQuery(fileQueryOptions.getFile({ fileId }));
+};
+
+export const useFiles = ({ projectId }: { projectId: Id<"projects"> }) => {
+  return useQuery(fileQueryOptions.getFiles({ projectId }));
 };
 
 export const useFolderContents = ({

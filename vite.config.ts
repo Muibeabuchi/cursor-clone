@@ -7,6 +7,11 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   server: {
     port: 3000,
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
+      // "Cross-Origin-Opener-Policy": "same-origin",
+    },
   },
   plugins: [
     tailwindcss(),
@@ -26,8 +31,21 @@ export default defineConfig({
         ],
       },
     }),
+    {
+      name: "isolation-headers",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+          res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+          next();
+        });
+      },
+    },
   ],
   ssr: {
     noExternal: ["@convex-dev/better-auth"],
+  },
+  optimizeDeps: {
+    exclude: ["@webcontainer/api"],
   },
 });

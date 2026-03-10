@@ -16,8 +16,8 @@ export const create = mutation({
   },
 });
 
-export const updateWorkflowStatus = internalMutation({
-  args: { workflowId: vWorkflowId, result: vResultValidator },
+export const updateWorkflowStatus = mutation({
+  args: { workflowId: vWorkflowId, result: vResultValidator, context: v.any() },
   async handler(ctx, args) {
     const workflowThreads = await ctx.db
       .query("workflowThread")

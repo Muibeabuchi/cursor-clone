@@ -199,8 +199,7 @@ export const createFilesTool = ({
         .string()
         .describe(
           "The ID of the parent folder. use empty strings for root level. Must be a valid folder Id from listFiles.",
-        )
-        .min(1, "parentId cannot be empty"),
+        ),
       files: z.array(
         z
           .object({

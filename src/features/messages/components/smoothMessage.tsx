@@ -174,6 +174,7 @@ const SmoothMessage = ({
           </div>
         ) : message.status === "failed" ? (
           <>
+            {/* {message?.error} */}
             <AlertOctagon />
             <MessageResponse>Error </MessageResponse>
           </>

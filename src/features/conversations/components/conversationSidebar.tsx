@@ -50,7 +50,6 @@ export const ConversationSidebar = ({
   const [input, setInput] = useState("");
   const [pastConversationCommandOpen, setPastConversationCommandOpen] =
     useState(false);
-  console.log("pastConversationCommandOpen", pastConversationCommandOpen);
   const [selectedConversationId, setSelectedConversationId] =
     useState<Id<"projectThreads"> | null>(null);
   const { data: conversations } = useConversations({
@@ -70,7 +69,7 @@ export const ConversationSidebar = ({
       ?._id as Id<"projectThreads"> | null) ??
     null;
 
-  console.log("activeConversationId", activeConversationId);
+  // console.log("activeConversationId", activeConversationId);
   const { data: conversation } = useConversation({
     projectThreadId: activeConversationId,
   });
@@ -130,7 +129,7 @@ export const ConversationSidebar = ({
       setInput("");
       return;
     }
-    console.log("handle submit has been called");
+    // console.log("handle submit has been called");
 
     let conversationId: Id<"projectThreads"> | null = activeConversationId;
     if (!conversationId) {

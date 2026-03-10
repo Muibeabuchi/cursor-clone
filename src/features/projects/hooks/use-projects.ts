@@ -56,3 +56,19 @@ export const useRenameProjectName = () => {
     }),
   });
 };
+
+export const useUpdateProjectSettings = () => {
+  return useMutation({
+    mutationFn: useConvexMutation(api.controller.projects.updateSettings),
+    // onSuccess: (data, variables) => {
+    //   const { projectId, settings } = variables;
+    //   localStorage.setQuery(
+    //     api.controller.projects.getById,
+    //     {
+    //       projectId,
+    //     },
+    //     { ...data, settings },
+    //   );
+    // },
+  });
+};

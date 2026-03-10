@@ -18,31 +18,38 @@ import {
 import CreateInput from "./create-input";
 import { LoadingRow } from "./loading-row";
 import { Tree } from "./tree";
+import { useEditor } from "~/features/editor/hooks/use-editor";
 
 export function FileExplorer({ project }: { project: Doc<"projects"> }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [collapseKey, setCollapseKey] = useState(0);
   const [creating, setCreating] = useState<"file" | "folder" | null>(null);
 
-  console.log({ projectId: project._id });
+  // console.log({ projectId: project._id });
 
   const { data: folderContents, isLoading } = useInitialProjectFolderContents({
     projectId: project._id,
     // enabled: isExpanded,
   });
 
+  const { openFile, setActiveTab } = useEditor(project._id);
+
   const createFile = useCreateFile();
   const createFolder = useCreateFolder();
 
   const handleCreate = async (name: string) => {
+    console.log("about to start creating file");
+
     setCreating(null);
     if (creating === "file") {
-      await createFile.mutateAsync({
+      const fileId = await createFile.mutateAsync({
         fileName: name,
         content: "",
         parentFolderId: undefined,
         projectId: project._id,
       });
+      console.log(`created file with id of ${fileId}`);
+      openFile(fileId);
     } else {
       await createFolder.mutateAsync({
         folderName: name,

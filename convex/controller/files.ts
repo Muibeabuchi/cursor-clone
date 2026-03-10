@@ -16,7 +16,8 @@ import {
 import { Doc, Id } from "../_generated/dataModel";
 import { api } from "../_generated/api";
 
-export const getFiles = authorizedProjectQuery({
+export const 
+getFiles = authorizedProjectQuery({
   args: {
     projectId: v.id("projects"),
   },

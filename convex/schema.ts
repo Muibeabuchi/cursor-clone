@@ -14,6 +14,13 @@ const exportStatus = v.optional(
   ),
 );
 
+export const projectSettings = v.object({
+  installCommand: v.optional(v.string()),
+  devCommand: v.optional(v.string()),
+});
+
+export type projectSettingType = Infer<typeof projectSettings>;
+
 const fileType = v.union(v.literal("file"), v.literal("folder"));
 export type FileType = Infer<typeof fileType>;
 
@@ -43,6 +50,7 @@ const projectsTable = defineTable({
   importStatus,
   exportStatus,
   exportRepoUrl: v.optional(v.string()),
+  settings: v.optional(projectSettings),
 }).index("by_owner_id", ["ownerId"]);
 
 // const conversationTable = defineTable({
@@ -88,6 +96,7 @@ const schema = defineSchema({
   files: filesTable,
   projectThreads: projectThreadsTable,
   workflowThread: workflowThreadJoinTable,
+
   // conversations: conversationTable,
   // messages: messageTable,
 });
