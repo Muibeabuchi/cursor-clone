@@ -30,6 +30,7 @@ import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { authClient } from "~/lib/auth-client";
 
 import { authQueryOptions } from "~/lib/queries/auth";
+import { currentUserQueryOptions } from "~/features/auth/hooks/use-current-user";
 import { Spinner } from "~/components/ui/spinner";
 import { Toaster } from "sonner";
 
@@ -85,6 +86,9 @@ export const Route = createRootRouteWithContext<{
       // During SSR only (the only time serverHttpClient exists),
       // set the auth token to make HTTP queries with.
       context.convexQueryClient.serverHttpClient?.setAuth(token);
+
+      // Prefetch current user data
+      await context.queryClient.ensureQueryData(currentUserQueryOptions);
     }
 
     // console.log("token", token);
