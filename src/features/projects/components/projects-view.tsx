@@ -7,35 +7,15 @@ import { SparkleIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import ProjectsCommndDiaogue from "./projects-command-diaogue";
 
-import {
-  uniqueNamesGenerator,
-  adjectives,
-  colors,
-  animals,
-} from "unique-names-generator";
-import { useCreateProjects } from "../hooks/use-projects";
-
 import { useHotkeys } from "react-hotkeys-hook";
 import { Logo } from "~/components/logo";
 import { ProjectListSkeleton } from "~/components/project-list-skeleton";
-import toast from "react-hot-toast";
-import { useNavigate } from "@tanstack/react-router";
+import NewProjectDialog from "./new-project-dialog";
 
 export const ProjectsView = () => {
   const [commandDialogOpen, setCommandDialogOpen] = useState(false);
-  const { mutateAsync: createProject, isPending: creatingProject } =
-    useCreateProjects();
-  const navigate = useNavigate();
+  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
 
-  const handleCreateProject = async () => {
-    const randomName = uniqueNamesGenerator({
-      dictionaries: [adjectives, colors, animals],
-      separator: "-",
-    });
-    const projectId = await createProject({ name: randomName });
-    toast.success("Project created successfully");
-    navigate({ to: `/projects/$projectId`, params: { projectId } });
-  };
   useHotkeys("ctrl+k", (e) => {
     e.preventDefault();
     setCommandDialogOpen(true);
@@ -48,8 +28,7 @@ export const ProjectsView = () => {
 
   useHotkeys("ctrl+j", (e) => {
     e.preventDefault();
-    handleCreateProject();
-    // setCommandDialogOpen(true);
+    setIsProjectDialogOpen(true);
   });
 
   return (
@@ -59,6 +38,10 @@ export const ProjectsView = () => {
         open={commandDialogOpen}
         onOpenChange={setCommandDialogOpen}
         // ref={ref}
+      />
+      <NewProjectDialog
+        open={isProjectDialogOpen}
+        onOpenChange={setIsProjectDialogOpen}
       />
       {/* )} */}
       <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center p-6 md:p-16">
@@ -79,7 +62,7 @@ export const ProjectsView = () => {
               <Button
                 variant="outline"
                 className="h-full w-full items-start justify-start p-4 bg-background border flex flex-col gap-6 rounded-none"
-                onClick={handleCreateProject}
+                onClick={() => setCommandDialogOpen(true)}
               >
                 <div className="flex items-center justify-between w-full">
                   <SparkleIcon className="size-4" />

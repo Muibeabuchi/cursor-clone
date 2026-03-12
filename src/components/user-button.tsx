@@ -1,4 +1,7 @@
-import { useCurrentUser } from "~/features/auth/hooks/use-current-user";
+import {
+  useCurrentUser,
+  useSuspenseCurrentUser,
+} from "~/features/auth/hooks/use-current-user";
 import { useSignOut } from "~/features/auth/hooks/use-auth-methods";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {

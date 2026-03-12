@@ -15,6 +15,7 @@ import type * as auth from "../auth.js";
 import type * as components_agent from "../components/agent.js";
 import type * as components_workflow from "../components/workflow.js";
 import type * as controller_files from "../controller/files.js";
+import type * as controller_github from "../controller/github.js";
 import type * as controller_messages from "../controller/messages.js";
 import type * as controller_projectThread from "../controller/projectThread.js";
 import type * as controller_projects from "../controller/projects.js";
@@ -32,6 +33,7 @@ import type * as models_fileModel from "../models/fileModel.js";
 import type * as models_projectModel from "../models/projectModel.js";
 import type * as playground from "../playground.js";
 import type * as utils_constants from "../utils/constants.js";
+import type * as utils_upload from "../utils/upload.js";
 
 import type {
   ApiFromModules,
@@ -47,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   "components/agent": typeof components_agent;
   "components/workflow": typeof components_workflow;
   "controller/files": typeof controller_files;
+  "controller/github": typeof controller_github;
   "controller/messages": typeof controller_messages;
   "controller/projectThread": typeof controller_projectThread;
   "controller/projects": typeof controller_projects;
@@ -64,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   "models/projectModel": typeof models_projectModel;
   playground: typeof playground;
   "utils/constants": typeof utils_constants;
+  "utils/upload": typeof utils_upload;
 }>;
 
 /**

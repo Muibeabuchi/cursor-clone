@@ -97,6 +97,7 @@ export const Route = createRootRouteWithContext<{
       token,
     };
   },
+
   errorComponent: (props) => {
     return (
       <RootDocument>

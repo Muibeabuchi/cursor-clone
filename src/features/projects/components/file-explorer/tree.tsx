@@ -69,14 +69,18 @@ export function Tree({
       });
       console.log(`created file with id of ${fileId}`);
       openFile(fileId);
+      // To simulate fatser optimistic updates
+      stopCreating();
     } else {
       createFolder.mutate({
         folderName: name,
         parentFolderId: item._id,
         projectId,
       });
+      // To simulate fatser optimistic updates
+      stopCreating();
     }
-    setCreating(null);
+    // setCreating(null);
     // open the file in the
     // stopCreating();
   };

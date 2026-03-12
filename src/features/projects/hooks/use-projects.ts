@@ -32,7 +32,9 @@ export const useGetProjectById = (projectId: Id<"projects">) => {
 
 export const useCreateProjects = () => {
   return useMutation({
-    mutationFn: useConvexMutation(api.controller.projects.create),
+    mutationFn: useConvexMutation(
+      api.controller.projects.createProjectWithMessage,
+    ),
   });
 };
 

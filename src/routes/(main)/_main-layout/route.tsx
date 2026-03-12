@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { authQueryOptions } from "~/lib/queries/auth";
 import { ThemeToggle } from "~/components/theme-toggle";
 import { UserButton } from "~/components/user-button";
+import { currentUserQueryOptions } from "~/features/auth/hooks/use-current-user";
 
 export const Route = createFileRoute("/(main)/_main-layout")({
   beforeLoad: async ({ context }) => {
@@ -10,6 +11,9 @@ export const Route = createFileRoute("/(main)/_main-layout")({
     if (!token) {
       throw redirect({ to: "/sign-in" });
     }
+  },
+  async loader({ context }) {
+    context.queryClient.ensureQueryData(currentUserQueryOptions);
   },
   component: RouteComponent,
 });

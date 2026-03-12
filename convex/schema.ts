@@ -2,10 +2,10 @@ import { vWorkflowId } from "@convex-dev/workflow";
 import { defineSchema, defineTable } from "convex/server";
 import { type Infer, v } from "convex/values";
 
-const importStatus = v.optional(
+export const importStatus = v.optional(
   v.union(v.literal("importing"), v.literal("completed"), v.literal("failed")),
 );
-const exportStatus = v.optional(
+export const exportStatus = v.optional(
   v.union(
     v.literal("exporting"),
     v.literal("completed"),

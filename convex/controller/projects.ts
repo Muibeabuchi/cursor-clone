@@ -9,8 +9,17 @@ import {
 import { ConvexError, v } from "convex/values";
 import { query } from "../_generated/server";
 import { createThread } from "@convex-dev/agent";
-import { components } from "../_generated/api";
+import { api, components, internal } from "../_generated/api";
 import { projectSettings } from "../schema";
+
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
+import { projectConversationAgent } from "../components/agent";
+import { workflow } from "../components/workflow";
 
 export const getPartial = authenticatedQuery({
   args: {
@@ -92,6 +101,76 @@ export const create = authenticatedMutation({
     // });
 
     return projectId;
+  },
+});
+
+export const createProjectWithMessage = authenticatedMutation({
+  args: {
+    prompt: v.string(),
+  },
+  async handler(ctx, args) {
+    const { _id: userId } = ctx.user;
+
+    const randomName = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, animals],
+      separator: "-",
+    });
+    // NOTE:: THere will be no need to authorize thread access seeing we are creating the project/thread for the first time
+    const projectId = await ctx.db.insert("projects", {
+      name: randomName,
+      ownerId: userId,
+      updatedAt: Date.now(),
+    });
+
+    // ? Create the thread with initial title
+    const threadId = await createThread(ctx, components.agent, {
+      userId,
+      title: "New Conversation",
+    });
+    await ctx.scheduler.runAfter(
+      0,
+      internal.controller.projectThread.updateConversationTitle,
+      {
+        threadId: threadId,
+        content: args.prompt,
+      },
+    );
+
+    const projectThreadId = await ctx.db.insert("projectThreads", {
+      projectId,
+      threadId: threadId,
+      userId,
+    });
+
+    const { messageId } = await projectConversationAgent.saveMessage(ctx, {
+      threadId: threadId,
+      message: { role: "user", content: args.prompt },
+      skipEmbeddings: true,
+      userId,
+    });
+
+    const workflowId = await workflow.start(
+      ctx,
+      internal.aiAgents.conversationWorkflow.processMessageWorkflow,
+      {
+        threadId: threadId,
+        promptMessageId: messageId,
+        projectId: projectId,
+        projectThreadId,
+        userId,
+      },
+      {
+        onComplete: api.controller.workflowThread.updateWorkflowStatus,
+        context: "",
+      },
+    );
+
+    return {
+      projectThreadId,
+      messageId,
+      threadId,
+      projectId,
+    };
   },
 });
 
