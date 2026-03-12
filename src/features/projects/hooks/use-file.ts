@@ -232,7 +232,32 @@ export const useUpdateFile = () => {
 
 export const useDeleteFile = () => {
   return useMutation({
-    mutationFn: useConvexMutation(api.controller.files.deleteFile),
+    mutationFn: useConvexMutation(
+      api.controller.files.deleteFile,
+    ).withOptimisticUpdate((localStorage, variables) => {
+      const { fileId, projectId, parentFolderId } = variables;
+      const data = localStorage.getQuery(
+        api.controller.files.getFolderContents,
+        {
+          projectId,
+          parentFolderId,
+        },
+      );
+      if (!data) return;
+
+      // find the file and update its content
+
+      const filteredData = data.filter((file) => file._id !== fileId);
+
+      localStorage.setQuery(
+        api.controller.files.getFolderContents,
+        {
+          projectId,
+          parentFolderId,
+        },
+        filteredData,
+      );
+    }),
   });
 };
 

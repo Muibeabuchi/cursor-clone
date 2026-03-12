@@ -20,6 +20,7 @@ import CreateInput from "./create-input";
 
 import RenameInput from "./rename-input";
 import { useEditor } from "~/features/editor/hooks/use-editor";
+import { toast } from "sonner";
 
 export function Tree({
   item,
@@ -186,12 +187,16 @@ export function Tree({
           item={item}
           level={level}
           onClick={() => setIsOpen((val) => !val)}
-          onDelete={() =>
+          onDelete={() => {
             // close tab
+            closeTab(item._id);
+            // delete file
             deleteFile.mutate({
               fileId: item._id,
-            })
-          }
+              projectId,
+              parentFolderId: item.parentId,
+            });
+          }}
           onDoubleClick={() => {}}
           onRename={() => setIsRenaming(true)}
           onCreateFile={() => startCreating("file")}
@@ -241,7 +246,10 @@ export function Tree({
           closeTab(item._id);
           deleteFile.mutate({
             fileId: item._id,
+            projectId,
+            parentFolderId: item.parentId,
           });
+          toast.success(`Successfully deleted ${item.fileName}`);
         }}
         onRename={() => setIsRenaming(true)}
         projectId={projectId}

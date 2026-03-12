@@ -16,8 +16,7 @@ import {
 import { Doc, Id } from "../_generated/dataModel";
 import { api } from "../_generated/api";
 
-export const 
-getFiles = authorizedProjectQuery({
+export const getFiles = authorizedProjectQuery({
   args: {
     projectId: v.id("projects"),
   },
@@ -478,6 +477,9 @@ export const renameFile = authorizedFileMutation({
 export const deleteFile = authorizedFileMutation({
   args: {
     fileId: v.id("files"),
+    // THese args are to enable optimistic updates
+    projectId: v.id("projects"),
+    parentFolderId: v.optional(v.id("files")),
   },
   async handler(ctx, { fileId }) {
     // recursively delete file/folder and all of its descendants

@@ -34,6 +34,7 @@ import type * as models_projectModel from "../models/projectModel.js";
 import type * as playground from "../playground.js";
 import type * as utils_constants from "../utils/constants.js";
 import type * as utils_upload from "../utils/upload.js";
+import type * as workflow_github from "../workflow/github.js";
 
 import type {
   ApiFromModules,
@@ -68,6 +69,7 @@ declare const fullApi: ApiFromModules<{
   playground: typeof playground;
   "utils/constants": typeof utils_constants;
   "utils/upload": typeof utils_upload;
+  "workflow/github": typeof workflow_github;
 }>;
 
 /**
