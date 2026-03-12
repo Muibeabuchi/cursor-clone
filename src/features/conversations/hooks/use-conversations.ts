@@ -94,39 +94,3 @@ export const useCreateConversation = () => {
   });
   return createConversation;
 };
-
-// export const useCreateMessage = () => {
-//   const createMessage = useMutation({
-//     mutationFn: useConvexMutation(
-//       api.controller.projectThread.createProjectThread,
-//     )
-//     // .withOptimisticUpdate((localStorage, variables) => {
-//     //   const { projectId, title } = variables;
-//     //   const data = localStorage.getQuery(
-//     //     api.controller.conversations.getByProjectId,
-//     //     {
-//     //       projectId,
-//     //     },
-//     //   );
-//     //   if (!data) return;
-
-//     //   const now = Date.now();
-//     //   const newData: Doc<"conversations"> = {
-//     //     _id: crypto.randomUUID() as Id<"conversations">,
-//     //     _creationTime: now,
-//     //     projectId,
-//     //     title,
-//     //     updatedAt: now,
-//     //   };
-
-//     //   localStorage.setQuery(
-//     //     api.controller.conversations.getByProjectId,
-//     //     {
-//     //       projectId,
-//     //     },
-//     //     [...data, newData],
-//     //   );
-//     // }),
-//   });
-//   return createMessage;
-// };

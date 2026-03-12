@@ -62,7 +62,7 @@ export const ProjectsView = () => {
               <Button
                 variant="outline"
                 className="h-full w-full items-start justify-start p-4 bg-background border flex flex-col gap-6 rounded-none"
-                onClick={() => setCommandDialogOpen(true)}
+                onClick={() => setIsProjectDialogOpen(true)}
               >
                 <div className="flex items-center justify-between w-full">
                   <SparkleIcon className="size-4" />

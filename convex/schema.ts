@@ -67,7 +67,8 @@ const workflowThreadJoinTable = defineTable({
   workflowStatus: v.union(v.literal("processing"), v.literal("cancelled")),
 })
   .index("by_threadId", ["threadId"])
-  .index("by_workflow", ["workflowId"]);
+  .index("by_workflow", ["workflowId"])
+  .index("by_project", ["projectId"]);
 
 const projectThreadsTable = defineTable({
   projectId: v.id("projects"),

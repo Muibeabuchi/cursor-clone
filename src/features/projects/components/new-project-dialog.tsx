@@ -65,21 +65,22 @@ export default function NewProjectDialog({
           <DialogDescription>
             Describe your projects and AI will help you build it
           </DialogDescription>
-          <PromptInput onSubmit={handleSubmit} className="border-none!">
-            <PromptInputBody>
-              <PromptInputTextarea
-                placeholder="Ask polaris to build..."
-                onChange={(e) => setInput(e.target.value)}
-                value={input}
-                disabled={isPending || isSubmitting}
-              />
-            </PromptInputBody>
-            <PromptInputFooter>
-              <PromptInputTools />
-              <PromptInputSubmit disabled={isPending || isSubmitting} />
-            </PromptInputFooter>
-          </PromptInput>
         </DialogHeader>
+
+        <PromptInput onSubmit={handleSubmit} className="border-none!">
+          <PromptInputBody>
+            <PromptInputTextarea
+              placeholder="Ask polaris to build..."
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              disabled={isPending || isSubmitting}
+            />
+          </PromptInputBody>
+          <PromptInputFooter>
+            <PromptInputTools />
+            <PromptInputSubmit disabled={isPending || isSubmitting} />
+          </PromptInputFooter>
+        </PromptInput>
       </DialogContent>
     </Dialog>
   );

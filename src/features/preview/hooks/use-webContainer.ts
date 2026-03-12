@@ -15,7 +15,7 @@ const getWebContainer = async (): Promise<WebContainer> => {
   }
 
   if (!bootPromise) {
-    bootPromise = WebContainer.boot({ coep: "require-corp" });
+    bootPromise = WebContainer.boot({ coep: "credentialless" });
   }
 
   webcontainerInstance = await bootPromise;

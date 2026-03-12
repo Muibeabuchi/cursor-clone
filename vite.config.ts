@@ -8,9 +8,8 @@ export default defineConfig({
   server: {
     port: 3000,
     headers: {
-      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Embedder-Policy": "credentialless",
       "Cross-Origin-Opener-Policy": "same-origin",
-      // "Cross-Origin-Opener-Policy": "same-origin",
     },
   },
   plugins: [
@@ -35,7 +34,7 @@ export default defineConfig({
       name: "isolation-headers",
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
-          res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+          res.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
           res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
           next();
         });

@@ -5,6 +5,7 @@ import FileBreadCrumbs from "./file-bread-crumbs";
 import { useFile, useUpdateFile } from "~/features/projects/hooks/use-file";
 import { CodeEditor } from "./code-editor";
 import { useEffect, useRef } from "react";
+import { AlertTriangleIcon } from "lucide-react";
 
 const DEBOUNCE_TIME = 2000;
 
@@ -61,7 +62,17 @@ export default function EditorView({
             }}
           />
         )}
-        {isActiveFileBinary && <p>TODO: implement binary file viewer</p>}
+        {isActiveFileBinary && (
+          <div className="flex size-full items-center justify-center ">
+            <div className="flex  flex-col gap-2.5 items-center max-w-md text-center">
+              <AlertTriangleIcon className="size-10 text-yellow-500" />
+              <p className="text-sm text-muted-foreground">
+                The file is not displayed in the editor because it is either
+                binary or uses an unsupported text encoding.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
