@@ -178,13 +178,14 @@ const SmoothMessage = ({
             <AlertOctagon />
             <MessageResponse>Error </MessageResponse>
           </>
-        ) : message.status === "pending" && message.text === "" ? (
-          <>
-            {/* appropriate icon for failed generation */}
-            <AlertCircle />
-            <MessageResponse>Error Generating response</MessageResponse>
-          </>
         ) : (
+          //  : message.status === "pending" && message.text === "" ? (
+          //   <>
+          //     {/* appropriate icon for failed generation */}
+          //     <AlertCircle />
+          //     <MessageResponse>Error Generating response</MessageResponse>
+          //   </>
+          // )
           <MessageResponse>{visibleText}</MessageResponse>
         )}
       </MessageContent>
