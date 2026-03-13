@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { HonoWithConvex, HttpRouterWithHono } from "convex-helpers/server/hono";
 import { ActionCtx } from "./_generated/server";
 import { createAuth } from "./auth";
+import { polar } from "./lib/polar";
 
 const app: HonoWithConvex<ActionCtx> = new Hono();
 
@@ -14,6 +15,8 @@ app.on(["POST", "GET"], "/api/auth/*", async (c) => {
   const auth = createAuth(c.env);
   return auth.handler(c.req.raw);
 });
+
+// Register the webhook handler at /polar/events
 
 /**
  * Verifies the GitHub webhook signature using HMAC-SHA256.
@@ -164,5 +167,6 @@ app.post("/github/webhook", async (c) => {
 });
 
 const http = new HttpRouterWithHono(app);
+polar.registerRoutes(http as any);
 
 export default http;

@@ -5,7 +5,8 @@ import authConfig from "./auth.config";
 import { components } from "./_generated/api";
 import { query } from "./_generated/server";
 import type { GenericCtx } from "@convex-dev/better-auth";
-import type { DataModel } from "./_generated/dataModel";
+import type { DataModel, Id } from "./_generated/dataModel";
+import { polar } from "./lib/polar";
 
 const siteUrl = process.env.SITE_URL!;
 
@@ -40,12 +41,40 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
 // Feel free to edit, omit, etc.
 export const getCurrentUser = query({
   args: {},
-  handler: async (ctx) => {
-    try {
-      const user = await authComponent.getAuthUser(ctx);
-      return user;
-    } catch (error) {
-      return null;
-    }
-  },
+  handler: async (ctx) =>
+    // : Promise<{
+    //   _id: string;
+    //   _creationTime: number;
+    //   image?: string | null | undefined | undefined;
+    //   userId?: string | null | undefined | undefined;
+    //   twoFactorEnabled?: boolean | null | undefined | undefined;
+    //   isAnonymous?: boolean | null | undefined | undefined;
+    //   username?: string | null | undefined | undefined;
+    //   displayUsername?: string | null | undefined | undefined;
+    //   phoneNumber?: string | null | undefined | undefined;
+    //   phoneNumberVerified?: boolean | null | undefined | undefined;
+    //   createdAt: number;
+    //   updatedAt: number;
+    //   email: string;
+    //   emailVerified: boolean;
+    //   name: string;
+    // } | null>
+    {
+      try {
+        const user = await authComponent.getAuthUser(ctx);
+        const subscription = await polar.getCurrentSubscription(ctx, {
+          userId: user._id,
+        });
+        return {
+          ...user,
+          subscription,
+          isFree: !subscription,
+          isPremium:
+            subscription?.productKey === "Monthly" ||
+            subscription?.productKey === "Yearly",
+        };
+      } catch (error) {
+        return null;
+      }
+    },
 });
