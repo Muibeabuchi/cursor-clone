@@ -33,6 +33,11 @@ const projectsCommndDiaogue = ({
       params: {
         projectId,
       },
+      search: (old) => ({
+        ...old,
+
+        activeView: old.activeView ?? "code",
+      }),
     });
     onOpenChange(false);
   };

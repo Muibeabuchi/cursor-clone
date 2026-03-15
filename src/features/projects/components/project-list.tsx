@@ -38,6 +38,11 @@ const ContinueCard = ({ data }: { data: Doc<"projects"> }) => {
           className="group"
           to={`/projects/$projectId`}
           params={{ projectId: data._id }}
+          search={(old) => ({
+            ...old,
+            activeView: old.activeView ?? "code",
+            // activeView: "editor",
+          })}
         >
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
@@ -60,6 +65,11 @@ const ProjectItem = ({ data }: { data: Doc<"projects"> }) => {
     <Link
       to={`/projects/$projectId`}
       params={{ projectId: data._id }}
+      search={(old) => ({
+        ...old,
+        activeView: old.activeView ?? "code",
+        // activeView: "editor",
+      })}
       className="flex items-center justify-between w-full group text-sm text-foreground/60 hover:text-foreground py-1 "
     >
       <div className="flex items-center gap-2">

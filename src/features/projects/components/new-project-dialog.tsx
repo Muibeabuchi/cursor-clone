@@ -49,6 +49,11 @@ export default function NewProjectDialog({
         params: {
           projectId,
         },
+        search: (old) => ({
+          ...old,
+          activeView: old.activeView ?? "code",
+          // activeView: "editor",
+        }),
       });
     } catch {
       toast.error("Unable to create Project");
